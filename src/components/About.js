@@ -9,180 +9,168 @@ export default function About() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.15, delayChildren: 0.1 }
+      transition: { staggerChildren: 0.12, delayChildren: 0.05 }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 50 },
+    hidden: { opacity: 0, y: 35 },
     visible: { 
       opacity: 1, 
       y: 0, 
-      transition: { type: "spring", stiffness: 65, damping: 18 } 
+      transition: { type: "spring", stiffness: 70, damping: 18 } 
     }
   };
 
+  const misiData = [
+    {
+      label: "Hubungan Pribadi",
+      deskripsi: "Membina setiap anggota untuk membangun hubungan pribadi dengan Tuhan melalui pengajaran rohani mendalam dan pemuridan rutin.",
+      icon: <Bookmark size={18} />
+    },
+    {
+      label: "Pelayanan Kasih",
+      deskripsi: "Menggerakkan setiap pribadi untuk menjadi saluran berkat dan menyebarkan pelayanan kasih yang nyata di lingkungan sekitar.",
+      icon: <Heart size={18} />
+    },
+    {
+      label: "Integritas Organisasi",
+      deskripsi: "Membangun jiwa kepemimpinan yang tertib, andal, luhur, dan bertanggung jawab penuh di hadapan Tuhan serta sesama.",
+      icon: <ShieldCheck size={18} />
+    }
+  ];
+
   return (
-    <section id="#about" className="relative py-28 md:py-44 bg-gradient-to-b from-[#FDFBF9] via-[#FAF6F0] to-[#F3EEE5] overflow-hidden">
+    <section id="about" className="relative py-24 md:py-36 bg-[#FDFBF7] text-[#2C2520] overflow-hidden selection:bg-[#6F4E37] selection:text-white">
       
-      {/* ─── PREMIUM BACKGROUND AMBIENT GLOW ─── */}
-      <div className="absolute top-10 right-[-5%] w-[600px] h-[600px] bg-gradient-to-br from-[#D4AF37]/5 to-[#6F4E37]/0 blur-[140px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[-5%] left-[-5%] w-[500px] h-[500px] bg-gradient-to-tr from-[#6F4E37]/5 to-[#D4AF37]/0 blur-[120px] rounded-full pointer-events-none" />
+      {/* ─── PREMIUM BACKGROUND TEXTURE & GRID (BUKAN GRADIENT AI) ─── */}
+      <div className="absolute inset-0 opacity-[0.012] bg-[radial-gradient(#6f4e37_1px,transparent_1px)] [background-size:32px_32px] pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full border-x border-[#6F4E37]/5 pointer-events-none" />
 
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
-        className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-16 lg:gap-20 px-6 md:px-12 items-center"
+        viewport={{ once: true, margin: "-100px" }}
+        className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-16 lg:gap-24 px-6 md:px-12 items-center relative z-10"
       >
         
-        {/* ─── KOLOM KIRI: THE LUXURY TRIPLE FOTO PORTFOLIO COLLAGE ─── */}
-        <motion.div variants={itemVariants} className="lg:col-span-5 relative w-full min-h-[500px] sm:min-h-[560px] lg:min-h-[620px] flex items-center justify-center">
-          <div className="absolute inset-4 rounded-[2.5rem] border border-[#D4AF37]/10 pointer-events-none z-0" />
+        {/* ─── KOLOM KIRI: EDITORIAL PHOTOGRAPHY COLLAGE (PREMIUM) ─── */}
+        <motion.div variants={itemVariants} className="lg:col-span-5 relative w-full h-[520px] sm:h-[600px] flex items-center justify-center select-none">
           
-          {/* FOTO 1: JANGKAR UTAMA */}
-          <div className="absolute top-[5%] left-0 w-[64%] h-[68%] rounded-[2.2rem] overflow-hidden shadow-[0_25px_50px_rgba(111,78,55,0.12)] border border-white/60 group z-20 transition-all duration-700 -rotate-3 hover:rotate-0 hover:scale-[1.03] hover:z-40 hover:shadow-[0_30px_60px_rgba(111,78,55,0.22)]">
+          {/* Garis Frame Abstrak Belakang */}
+          <div className="absolute top-6 left-6 right-2 bottom-12 border border-[#6F4E37]/10 rounded-2xl pointer-events-none z-0" />
+          
+          {/* FOTO 1: JANGKAR UTAMA (LANSKAP TENGAH) */}
+          <div className="absolute top-[15%] left-0 w-[72%] h-[50%] rounded-2xl overflow-hidden shadow-[0_20px_45px_rgba(61,42,28,0.08)] border border-white z-20 group transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_25px_50px_rgba(61,42,28,0.15)]">
             <Image
               src="/kegiatan/jumat.png" 
               alt="Persekutuan TE Utama"
               fill
-              className="object-cover object-center transition-transform duration-700 ease-out"
+              className="object-cover object-center"
               sizes="(max-w-1024px) 50vw, 30vw"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent mix-blend-multiply" />
+            <div className="absolute inset-0 bg-[#3D2A1C]/10 mix-blend-multiply transition-opacity group-hover:opacity-0" />
           </div>
 
-          {/* FOTO 2: SATELLIT ATAS */}
-          <div className="absolute top-0 right-[-2%] w-[42%] h-[40%] rounded-[1.8rem] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.06)] border border-white/50 group z-30 transition-all duration-700 rotate-2 hover:rotate-0 hover:scale-[1.04] hover:z-40 hover:shadow-[0_25px_50px_rgba(0,0,0,0.15)]">
+          {/* FOTO 2: SATELLIT ATAS KANAN (KOTAK MINI) */}
+          <div className="absolute top-0 right-0 w-[46%] h-[34%] rounded-2xl overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.05)] border border-white z-30 group transition-all duration-500 hover:scale-[1.03]">
             <Image
               src="/kegiatan/doa.jpeg" 
               alt="Aktivitas Pendalaman Alkitab TE"
               fill
-              className="object-cover object-center transition-transform duration-700 ease-out"
+              className="object-cover object-center"
               sizes="(max-w-1024px) 30vw, 20vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
           </div>
 
-          {/* FOTO 3: FONDASI BAWAH */}
-          <div className="absolute bottom-[8%] right-[2%] w-[52%] h-[45%] rounded-[2rem] overflow-hidden shadow-[0_25px_45px_rgba(111,78,55,0.15)] border border-white/60 group z-10 transition-all duration-700 -rotate-1 hover:rotate-0 hover:scale-[1.03] hover:z-40 hover:shadow-[0_35px_60px_rgba(111,78,55,0.25)]">
+          {/* FOTO 3: FONDASI BAWAH KANAN (VERTIKAL PANJANG) */}
+          <div className="absolute bottom-4 right-[4%] w-[58%] h-[40%] rounded-2xl overflow-hidden shadow-[0_20px_40px_rgba(61,42,28,0.1)] border border-white z-10 group transition-all duration-500 hover:scale-[1.02]">
             <Image
               src="/kegiatan/paskah.jpeg" 
               alt="Pelayanan Sosial Komunitas TE"
               fill
-              className="object-cover object-center transition-transform duration-700 ease-out"
+              className="object-cover object-center"
               sizes="(max-w-1024px) 35vw, 22vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent mix-blend-multiply" />
+            <div className="absolute inset-0 bg-[#3D2A1C]/5 mix-blend-multiply" />
           </div>
 
-          {/* FLOATING GLASS INSIGNIA (Diperbarui agar super kontras dan mudah dibaca) */}
-          <div className="absolute bottom-2 left-[-2%] p-4 bg-white/95 backdrop-blur-md border border-stone-200 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.15)] flex items-center gap-3.5 z-40 max-w-[240px] transform select-none hover:scale-105 transition-all duration-300">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#6F4E37] to-[#8B6347] flex items-center justify-center text-white shadow-md shrink-0">
-              <Cross size={18} className="text-[#D4AF37]" />
+          {/* FLOATING DESIGNER INSIGNIA */}
+          <div className="absolute bottom-10 left-[-4%] px-5 py-4 bg-white border border-[#6F4E37]/10 rounded-xl shadow-[0_15px_35px_rgba(61,42,28,0.06)] flex items-center gap-3.5 z-45 transform hover:scale-103 transition-transform duration-300">
+            <div className="w-9 h-9 rounded-lg bg-[#6F4E37] flex items-center justify-center text-white shrink-0">
+              <Cross size={16} className="text-[#D4AF37]" />
             </div>
             <div className="leading-tight">
-              <p className="text-[10px] font-black tracking-[0.2em] text-[#B38F24] uppercase">
-                Soli Deo
-              </p>
-              <p className="text-xs font-black text-[#6F4E37] mt-0.5">
-                Bertumbuh & Bersinar
-              </p>
+              <p className="text-[10px] font-black tracking-[0.2em] text-[#B38F24] uppercase">Soli Deo Gloria</p>
+              <p className="text-xs font-black text-[#3D2A1C] mt-0.5">Bertumbuh & Bersinar</p>
             </div>
           </div>        
-          </motion.div>
+        </motion.div>
 
-        {/* ─── KOLOM KANAN: PANEL VISI & MISI ─── */}
+        {/* ─── KOLOM KANAN: PANEL VISI & MISI EDITORIAL ─── */}
         <motion.div variants={itemVariants} className="lg:col-span-7 flex flex-col justify-center">
           
-          <div className="flex items-center gap-3 mb-6 select-none">
-            <span className="h-[1px] w-12 bg-gradient-to-r from-[#D4AF37] to-transparent" />
-            <span className="text-[10px] md:text-xs font-black tracking-[0.35em] text-[#B38F24] uppercase">
-              STRATEGI & TUJUAN
+          <div className="flex items-center gap-2 mb-4 select-none">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
+            <span className="text-[11px] font-black tracking-[0.25em] text-[#B38F24] uppercase">
+              Arah & Komitmen
             </span>
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-black text-[#6F4E37] tracking-tight leading-[1.12] mb-6">
-            Visi & Misi <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6F4E37] via-[#8B6347] to-[#D4AF37]">
-              Organisasi Kami
-            </span>
+          <h2 className="text-4xl md:text-5xl font-black text-[#3D2A1C] tracking-tight leading-[1.1] mb-10">
+            Visi & Misi <span className="font-serif italic font-normal text-[#8B6347]">Organisasi</span>
           </h2>
 
-          {/* ── VISI SECTION ── */}
-          <div className="relative p-8 rounded-3xl bg-gradient-to-br from-white/80 to-white/40 border border-white shadow-[0_20px_40px_rgba(111,78,55,0.05)] mb-10 overflow-hidden group">
-            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <Sparkles size={120} className="text-[#D4AF37]" />
-            </div>
-            <h3 className="text-xs font-black tracking-[0.2em] text-[#D4AF37] uppercase mb-3 flex items-center gap-2">
-              <Flame size={14} /> VISI TE
+          {/* ── VISI SECTION (MAGAZINE STYLE QUOTE) ── */}
+          <div className="relative border-l-4 border-[#6F4E37] pl-6 md:pl-8 py-2 mb-14 group">
+            <div className="absolute -top-6 left-4 text-6xl font-serif text-[#6F4E37]/5 select-none font-black">“</div>
+            <h3 className="text-[10px] font-black tracking-widest text-[#B38F24] uppercase mb-2 flex items-center gap-1.5">
+              <Flame size={12} className="fill-[#D4AF37]/10 text-[#D4AF37]" /> Visi Utama
             </h3>
-            <p className="text-lg md:text-xl font-bold text-[#6F4E37] leading-relaxed italic">
-              &ldquo;Membina karakter setiap siswa kristen melalui persekutuan dan pelayanan untuk menjadi saksi-saksi Kristus sebagai penggenapan amanat agung&rdquo;
+            <p className="text-xl md:text-2xl font-serif italic text-[#3D2A1C] leading-relaxed">
+              &ldquo;Membina karakter setiap siswa Kristen melalui persekutuan dan pelayanan untuk menjadi saksi-saksi Kristus sebagai penggenapan amanat agung.&rdquo;
             </p>
           </div>
 
-          {/* ── MISI SECTION ── */}
-          <h3 className="text-xs font-black tracking-[0.2em] text-[#B38F24] uppercase mb-6 pl-2">
-            MISI ORGANISASI
-          </h3>
+          {/* ── MISI SECTION (CLEAN VERTICAL INDEX LIST) ── */}
+          <div className="space-y-6">
+            <h3 className="text-[10px] font-black tracking-widest text-[#B38F24] uppercase border-b border-[#6F4E37]/10 pb-2">
+              Misi Operasional
+            </h3>
 
-          <div className="grid gap-4">
-            {/* Misi 1 */}
-            <div className="flex items-start gap-5 p-5 rounded-2xl bg-white/40 border border-stone-200/50 hover:bg-white transition-all duration-300 group/item">
-              <div className="w-10 h-10 rounded-xl bg-[#6F4E37]/5 text-[#D4AF37] flex items-center justify-center shrink-0 group-hover/item:bg-[#6F4E37] group-hover/item:text-white transition-all duration-300">
-                <Bookmark size={20} />
-              </div>
-              <div>
-                <h4 className="text-xs font-black text-[#6F4E37] uppercase tracking-wider mb-1">Hubungan Pribadi</h4>
-                <p className="text-sm text-stone-600 leading-relaxed">
-                  Membina setiap anggota untuk membangun hubungan pribadi dengan Tuhan melalui pengajaran dan pemuridan.
-                </p>
-              </div>
-            </div>
-
-            {/* Misi 2 */}
-            <div className="flex items-start gap-5 p-5 rounded-2xl bg-white/40 border border-stone-200/50 hover:bg-white transition-all duration-300 group/item">
-              <div className="w-10 h-10 rounded-xl bg-[#6F4E37]/5 text-[#D4AF37] flex items-center justify-center shrink-0 group-hover/item:bg-[#6F4E37] group-hover/item:text-white transition-all duration-300">
-                <Heart size={20} />
-              </div>
-              <div>
-                <h4 className="text-xs font-black text-[#6F4E37] uppercase tracking-wider mb-1">Pelayanan Kasih</h4>
-                <p className="text-sm text-stone-600 leading-relaxed">
-                  Membina setiap anggota untuk memberikan pelayanan kasih disekelilingnya.
-                </p>
-              </div>
-            </div>
-
-            {/* Misi 3 */}
-            <div className="flex items-start gap-5 p-5 rounded-2xl bg-white/40 border border-stone-200/50 hover:bg-white transition-all duration-300 group/item">
-              <div className="w-10 h-10 rounded-xl bg-[#6F4E37]/5 text-[#D4AF37] flex items-center justify-center shrink-0 group-hover/item:bg-[#6F4E37] group-hover/item:text-white transition-all duration-300">
-                <ShieldCheck size={20} />
-              </div>
-              <div>
-                <h4 className="text-xs font-black text-[#6F4E37] uppercase tracking-wider mb-1">Integritas Organisasi</h4>
-                <p className="text-sm text-stone-600 leading-relaxed">
-                  Membangun jiwa berorganisasi yang tertib, handal dan bertanggung jawab pada Tuhan dan organisasi.
-                </p>
-              </div>
+            <div className="divide-y divide-[#6F4E37]/10">
+              {misiData.map((misi, index) => (
+                <div 
+                  key={index} 
+                  className="flex gap-5 pt-5 pb-5 first:pt-0 last:pb-0 group/misi transition-all duration-300"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-[#6F4E37]/5 text-[#6F4E37] flex items-center justify-center shrink-0 group-hover/misi:bg-[#6F4E37] group-hover/misi:text-white transition-colors duration-300">
+                    {misi.icon}
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-black text-[#3D2A1C] group-hover/misi:text-[#8B6347] transition-colors duration-200">
+                      {misi.label}
+                    </h4>
+                    <p className="text-xs md:text-sm text-stone-600 leading-relaxed max-w-xl">
+                      {misi.deskripsi}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* BADGE JAMINAN KUALITAS */}
-          <div className="border-t border-stone-300/60 mt-10 pt-8 flex flex-wrap items-center gap-8">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-[#D4AF37]/10 flex items-center justify-center text-[#B38F24]">
-                <CalendarDays size={16} />
-              </div>
-              <span className="text-[10px] font-bold tracking-widest uppercase text-stone-400">Rutin & Terjadwal</span>
+          {/* METADATA BAR BAWAH */}
+          <div className="border-t border-[#6F4E37]/10 mt-12 pt-6 flex flex-wrap items-center gap-6 md:gap-10">
+            <div className="flex items-center gap-2">
+              <CalendarDays size={14} className="text-[#B38F24]" />
+              <span className="text-[10px] font-bold tracking-wider uppercase text-stone-500">Program Terjadwal</span>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-[#D4AF37]/10 flex items-center justify-center text-[#B38F24]">
-                <Award size={16} />
-              </div>
-              <span className="text-[10px] font-bold tracking-widest uppercase text-stone-400">Terakreditasi Sekolah</span>
+            <div className="flex items-center gap-2">
+              <Award size={14} className="text-[#B38F24]" />
+              <span className="text-[10px] font-bold tracking-wider uppercase text-stone-500">Resmi SMKN 3 Manado</span>
             </div>
           </div>
 

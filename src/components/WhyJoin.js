@@ -1,32 +1,32 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ShieldCheck, HeartHandshake, Award, Sparkles, ArrowRight } from "lucide-react";
+import { ShieldCheck, HeartHandshake, Award, Sparkles, ArrowUpRight } from "lucide-react";
 
 const reasons = [
   {
+    no: "01",
     title: "Bertumbuh Dalam Iman",
-    desc: "Bukan sekadar rutinitas rohani, ini tempat nyata untuk memperdalam pengenalan akan Tuhan melalui firman dan doa bersama yang menguatkan.",
+    desc: "Bukan sekadar rutinitas rohani biasa. Ini wadah nyata buat kamu memperdalam pengenalan akan Tuhan lewat firman dan kelompok doa yang saling menguatkan.",
     icon: ShieldCheck,
-    color: "from-[#8B6347] to-[#6F4E37]",
   },
   {
-    title: "Komunitas Positif",
-    desc: "Temukan lingkungan pertemanan sehat (circle) yang saling mendukung, menjaga dari pergaulan negatif, dan membawa dampak baik bagi masa depanmu.",
+    no: "02",
+    title: "Circle Pertemanan Positif",
+    desc: "Temukan lingkungan sehat yang suportif. Tempat di mana kita bisa saling jaga dari pergaulan negatif, saling mendukung, dan membawa dampak baik buat masa depan.",
     icon: HeartHandshake,
-    color: "from-[#D4AF37] to-[#B38F24]",
   },
   {
-    title: "Belajar Melayani",
-    desc: "Asah potensi kepemimpinan dan talenta terbaikmu. Belajar menjadi Worship Leader, pemain musik, tim multimedia, hingga manajemen organisasi.",
+    no: "03",
+    title: "Asah Bakat & Leadership",
+    desc: "Kembangkan potensi terbaikmu di sini. Belajar jadi Worship Leader, pemain musik, tim multimedia kreatif, hingga belajar manajemen organisasi asli.",
     icon: Award,
-    color: "from-[#8B6347] to-[#D4AF37]",
   },
   {
-    title: "Menjadi Berkat",
-    desc: "Ambil peran nyata menjadi terang di sekolah melalui pelayanan altar dan aksi sosial anjangsana dari rumah ke rumah yang berdampak luas.",
+    no: "04",
+    title: "Menjadi Berkat Nyata",
+    desc: "Ambil peran langsung jadi terang di sekolah melalui pelayanan altar ibadah rutin dan aksi sosial kunjungan kasih (anjangsana) yang berdampak luas.",
     icon: Sparkles,
-    color: "from-[#6F4E37] to-[#D4AF37]",
   },
 ];
 
@@ -35,51 +35,54 @@ export default function WhyJoin() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.12, delayChildren: 0.1 }
+      transition: { staggerChildren: 0.1, delayChildren: 0.05 }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 25 },
     visible: { 
       opacity: 1, 
       y: 0, 
-      transition: { type: "spring", stiffness: 70, damping: 16 } 
+      transition: { type: "spring", stiffness: 80, damping: 16 } 
     }
   };
 
   return (
-    <section id="#whyjoin" className="relative py-28 md:py-36 bg-[#FAF8F5] overflow-hidden">
+    <section id="whyjoin" className="relative py-24 md:py-36 bg-[#FDFBF7] text-[#2C2520] overflow-hidden selection:bg-[#6F4E37] selection:text-white">
       
-      {/* Ambient Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-[#D4AF37]/5 blur-[140px] rounded-full pointer-events-none" />
+      {/* ─── GRID ACCENT BACKGROUND ─── */}
+      <div className="absolute inset-0 opacity-[0.012] bg-[radial-gradient(#6f4e37_1px,transparent_1px)] [background-size:32px_32px] pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full border-x border-[#6F4E37]/5 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         
         {/* ─── HEADER SECTION ─── */}
-        <div className="text-center max-w-2xl mx-auto mb-20">
-          <div className="inline-flex items-center gap-3 mb-4 select-none">
-            <span className="h-[1px] w-6 bg-[#D4AF37]/60" />
-            <span className="text-[10px] md:text-xs font-black tracking-[0.3em] text-[#B38F24] uppercase">
-              {"Join Our Family"}
-            </span>
-            <span className="h-[1px] w-6 bg-[#D4AF37]/60" />
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between border-b border-[#6F4E37]/10 pb-12 mb-16 gap-6">
+          <div className="max-w-xl">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
+              <span className="text-[11px] font-black tracking-[0.25em] text-[#B38F24] uppercase">
+                Join Our Movement
+              </span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black text-[#3D2A1C] tracking-tight leading-[1.1]">
+              Kenapa Kamu Harus <br />
+              <span className="font-serif italic font-normal text-[#8B6347]">Join Team Evangelisasi?</span>
+            </h2>
           </div>
-          <h2 className="text-3xl md:text-5xl font-black text-[#6F4E37] tracking-tight leading-tight">
-            Mengapa Harus <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#8B6347] to-[#D4AF37]">Bergabung?</span>
-          </h2>
-          <p className="text-stone-500 text-sm md:text-base mt-4 leading-relaxed font-medium">
-            Masa sekolah adalah waktu terbaik untuk bertumbuh. Di sini, kamu tidak berjalan sendirian—kita berproses bersama untuk menemukan tujuan hidup yang bermakna.
+          <p className="text-stone-600 max-w-sm text-sm md:text-base leading-relaxed font-medium">
+            Masa SMK adalah waktu terbaik buat nemuin jati diri. Di sini, kamu gak bakal jalan sendirian—kita berproses bareng buat hidup yang lebih berdampak.
           </p>
         </div>
 
-        {/* ─── CARDS GRID ─── */}
+        {/* ─── PREMIUM ASYMMETRIC GRID ─── */}
         <motion.div 
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-60px" }}
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-0 border border-[#6F4E37]/10 rounded-3xl overflow-hidden bg-white shadow-[0_15px_40px_rgba(61,42,28,0.02)]"
         >
           {reasons.map((item, i) => {
             const IconComponent = item.icon;
@@ -87,53 +90,61 @@ export default function WhyJoin() {
               <motion.div 
                 key={i} 
                 variants={itemVariants}
-                className="group relative p-8 rounded-3xl bg-white border border-stone-200/50 shadow-[0_4px_25px_rgba(111,78,55,0.02)] hover:shadow-[0_24px_50px_rgba(111,78,55,0.07)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                className="group relative p-8 flex flex-col justify-between border-b sm:border-b-0 sm:border-r border-[#6F4E37]/10 last:border-r-0 last:border-b-0 md:even:border-b-0 sm:[&:nth-child(2)]:border-r-0 lg:[&:nth-child(2)]:border-r border-[#6F4E37]/10 transition-all duration-300 hover:bg-[#6F4E37]/[0.02]"
               >
                 <div>
-                  {/* Icon Circle */}
-                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${item.color} p-[1px] flex items-center justify-center text-white mb-6 shadow-sm group-hover:scale-110 transition-transform duration-300`}>
-                    <div className="w-full h-full rounded-[15px] bg-[#FAF8F5] group-hover:bg-transparent flex items-center justify-center text-[#6F4E37] group-hover:text-white transition-colors duration-300">
-                      <IconComponent size={22} strokeWidth={1.8} />
+                  {/* Card Badge Header */}
+                  <div className="flex justify-between items-start mb-8">
+                    <div className="w-10 h-10 rounded-xl bg-[#6F4E37]/5 text-[#6F4E37] flex items-center justify-center group-hover:bg-[#6F4E37] group-hover:text-white transition-all duration-300">
+                      <IconComponent size={20} />
                     </div>
+                    <span className="text-3xl font-serif italic font-bold text-stone-200 select-none group-hover:text-[#D4AF37]/40 transition-colors duration-300">
+                      {item.no}
+                    </span>
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-lg font-black text-[#6F4E37] tracking-tight group-hover:text-[#8B6347] transition-colors duration-300">
+                  <h3 className="text-lg font-black text-[#3D2A1C] tracking-tight group-hover:text-[#8B6347] transition-colors duration-200">
                     {item.title}
                   </h3>
-                  <p className="text-stone-500 text-xs md:text-[13px] mt-2.5 leading-relaxed font-medium">
+                  <p className="text-stone-600 text-xs md:text-sm mt-3 leading-relaxed font-medium">
                     {item.desc}
                   </p>
                 </div>
 
-                {/* Decorative Bottom Line */}
-                <div className="w-0 h-[3px] bg-gradient-to-r from-[#8B6347] to-[#D4AF37] absolute bottom-0 left-8 rounded-full group-hover:w-16 transition-all duration-300" />
+                {/* Micro-interaction Line */}
+                <div className="w-full h-[2px] bg-[#D4AF37] absolute bottom-0 left-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
               </motion.div>
             );
           })}
         </motion.div>
 
-        {/* ─── CALL TO ACTION BUTTON (TOMBOL GABUNG) ─── */}
+        {/* ─── HERO CALL TO ACTION (INTERAKTIF & MAHAL) ─── */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          className="text-center mt-20 flex flex-col items-center gap-4"
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="mt-20 p-8 md:p-12 rounded-3xl bg-gradient-to-br from-[#3D2A1C] to-[#23170E] text-white relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-[0_20px_50px_rgba(35,23,14,0.15)]"
         >
-          <p className="text-stone-600 text-xs md:text-sm font-semibold tracking-wide">
-            {"Siap mengambil langkah pertama untuk berdampak?"}
-          </p>
+          {/* Aksen Latar Belakang */}
+          <div className="absolute right-0 top-0 w-[300px] h-[300px] bg-[#D4AF37]/10 blur-[80px] rounded-full pointer-events-none" />
+          
+          <div className="text-center md:text-left space-y-2 relative z-10">
+            <h4 className="text-xl md:text-2xl font-black tracking-tight">
+              Siap mengambil langkah awal untuk berdampak?
+            </h4>
+            <p className="text-xs md:text-sm text-stone-300 font-medium">
+              Jangan lewatkan kesempatan berproses bareng keluarga besar Team Evangelisasi SMKN 3 Manado.
+            </p>
+          </div>
           
           <button 
             onClick={() => window.open("https://link-pendaftaran-kamu.com", "_blank")}
-            className="group relative inline-flex items-center gap-3 px-8 py-4 bg-[#6F4E37] text-white font-black text-sm rounded-2xl shadow-[0_10px_25px_rgba(111,78,55,0.2)] hover:bg-[#5A3E2B] hover:shadow-[0_15px_30px_rgba(111,78,55,0.3)] transition-all duration-300"
+            className="group shrink-0 relative inline-flex items-center gap-3 px-8 py-4 bg-[#D4AF37] text-stone-900 font-black text-sm rounded-xl shadow-lg hover:bg-white transition-all duration-300 w-full md:w-auto justify-center"
           >
-            {"Gabung Bersama Kami"}
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-200" />
-            
-            {/* Soft border glow animation effect */}
-            <div className="absolute inset-0 border border-white/20 rounded-2xl pointer-events-none" />
+            Isi Formulir Pendaftaran
+            <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
           </button>
         </motion.div>
 
