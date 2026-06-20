@@ -11,15 +11,16 @@ export default function Navbar({
   activeTab, 
   setActiveTab 
 }) {
-  const [show, setShow] = useState(false); 
+  const [show, setShow] = useState(false); // 🚀 Mulai dari false agar tersembunyi saat loading screen aktif
   const [isReady, setIsReady] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
 
   useEffect(() => {
+    // ⏱️ Menahan navbar agar tidak berkedip saat loading screen utama web berjalan
     const timer = setTimeout(() => {
       setIsReady(true);
       setShow(true);
-    }, 2000); 
+    }, 1500); 
 
     let lastScroll = 0;
 
@@ -27,26 +28,54 @@ export default function Navbar({
       if (!isReady) return;
       const currentScroll = window.scrollY;
 
+      // Logika penentu posisi di paling atas halaman
       if (currentScroll <= 30) {
         setIsAtTop(true);
         setShow(true);
       } else {
         setIsAtTop(false);
-        if (currentScroll > lastScroll && currentScroll > 150) {
+        // Sembunyikan jika scroll ke bawah melewati batas 120px, munculkan jika scroll ke atas
+        if (currentScroll > lastScroll && currentScroll > 120) {
           setShow(false); 
         } else {
           setShow(true);  
         }
       }
       lastScroll = currentScroll;
+
+      // 🎯 LOGA AUTO-ACTIVE TAB: Mengubah tab aktif otomatis berdasarkan posisi scroll section
+      const sections = ["Beranda", "Tentang", "Kegiatan", "WhyJoin", "Details"];
+      const scrollPosition = currentScroll + 230;
+
+      sections.forEach((id) => {
+        // Konversi id menu ke id section HTML (contoh: 'Tentang' memantau elemen '#about')
+        const htmlIdMap = {
+          Beranda: "beranda",
+          Tentang: "tentang",
+          Kegiatan: "kegiatan",
+          WhyJoin: "whyjoin",
+          Details: "details"
+        };
+        
+        const targetId = htmlIdMap[id];
+        const element = document.getElementById(targetId);
+        
+        if (element) {
+          const top = element.offsetTop;
+          const height = element.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveTab(id);
+          }
+        }
+      });
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       clearTimeout(timer);
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [isReady]);
+  }, [isReady, setActiveTab]);
 
   const menuItems = [
     { id: "Beranda", label: "BERANDA", href: "#beranda" },
@@ -60,14 +89,14 @@ export default function Navbar({
 
   return (
     <>
-      {/* ─── TOMBOL PEMICU PANAH DESKTOP ─── */}
+      {/* ─── TOMBOL PEMICU PANAH DESKTOP (JIKA NAVBAR SEMBUNYI) ─── */}
       <AnimatePresence>
         {!show && !isAtTop && (
           <motion.button
             initial={{ opacity: 0, y: -30, x: "-50%" }}
             animate={{ opacity: 1, y: 0, x: "-50%" }}
             exit={{ opacity: 0, y: -30, x: "-50%" }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+            transition={{ type: "spring", stiffness: 180, damping: 20 }}
             onClick={() => setShow(true)}
             className="hidden md:flex fixed top-0 left-1/2 z-[9999] bg-white/95 backdrop-blur-md border border-t-0 border-[#6F4E37]/10 px-7 py-2.5 rounded-b-2xl shadow-[0_10px_30px_rgba(111,78,55,0.06)] text-[#6F4E37] font-bold text-xs items-center gap-2 cursor-pointer select-none"
           >
@@ -80,14 +109,16 @@ export default function Navbar({
       {/* ─── 1. NAVBAR DESKTOP ─── */}
       <div 
         className={`hidden md:flex inset-x-0 z-[9999] justify-center items-center px-6 pointer-events-none transition-all duration-500 ${
-          isAtTop ? "absolute top-2 w-full" : "fixed top-3"
+          isAtTop ? "absolute top-2 w-full" : "fixed top-4"
         }`}
       >
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           {show && (
             <motion.nav 
-              layout
-              transition={{ type: "spring", stiffness: 180, damping: 24 }}
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ type: "spring", stiffness: 120, damping: 22, mass: 1.1 }}
               className={`pointer-events-auto w-full grid grid-cols-3 items-center rounded-[2.5rem] transition-all duration-500 ${
                 isAtTop 
                   ? "max-w-7xl px-10 py-3 bg-transparent text-white" 
@@ -153,7 +184,7 @@ export default function Navbar({
                                 ? "linear-gradient(to right, #ffffff, #FFF5D6)" 
                                 : "linear-gradient(to right, #6F4E37, #8B6347)"
                             }}
-                            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                            transition={{ type: "spring", stiffness: 350, damping: 30 }}
                           />
                         )}
                       </li>
@@ -184,7 +215,7 @@ export default function Navbar({
         </AnimatePresence>
       </div>
 
-      {/* ─── 2. MOBILE NAVIGATION (DENGAN LOGO DI KIRI + INDIKATOR COKELAT) ─── */}
+      {/* ─── 2. MOBILE NAVIGATION ─── */}
       <AnimatePresence>
         {showMobileNav && (
           <motion.div
@@ -194,7 +225,7 @@ export default function Navbar({
             transition={{ type: "spring", stiffness: 300, damping: 28 }}
             className="md:hidden fixed left-1/2 bottom-5 z-[9999] w-[94vw] max-w-md bg-white border border-stone-200/80 shadow-[0_15px_40px_rgba(111,78,55,0.08)] rounded-[2rem] px-4 py-2 flex items-center gap-2"
           >
-            {/* LOGO DI SISI KIRI (MENGHARGAI REFERENSI GAMBAR) */}
+            {/* LOGO DI SISI KIRI */}
             <div className="flex items-center pl-1 pr-3 border-r border-stone-200/80 shrink-0 select-none">
               <div className="w-[34px] h-[34px] border border-stone-100 bg-stone-50 rounded-full flex items-center justify-center shadow-inner">
                 <Image 
@@ -208,12 +239,12 @@ export default function Navbar({
               </div>
             </div>
 
-            {/* CONTAINER UTAMA ITEM NAVIGASI */}
+            {/* CONTAINER ITEM NAVIGASI */}
             <div className="flex flex-1 justify-between items-center">
               <MobileNavItem 
                 href="#beranda" 
                 id="Beranda" 
-                icon={<House size={19} strokeWidth={isActiveTab("Beranda") ? 2.5 : 2} />} 
+                icon={<House size={19} strokeWidth={activeTab === "Beranda" ? 2.5 : 2} />} 
                 label="HOME" 
                 activeTab={activeTab} 
                 setActiveTab={setActiveTab} 
@@ -221,7 +252,7 @@ export default function Navbar({
               <MobileNavItem 
                 href="#about" 
                 id="Tentang" 
-                icon={<BookOpen size={19} strokeWidth={isActiveTab("Tentang") ? 2.5 : 2} />} 
+                icon={<BookOpen size={19} strokeWidth={activeTab === "Tentang" ? 2.5 : 2} />} 
                 label="ABOUT" 
                 activeTab={activeTab} 
                 setActiveTab={setActiveTab} 
@@ -229,7 +260,7 @@ export default function Navbar({
               <MobileNavItem 
                 href="#kegiatan" 
                 id="Kegiatan" 
-                icon={<CalendarDays size={19} strokeWidth={isActiveTab("Kegiatan") ? 2.5 : 2} />} 
+                icon={<CalendarDays size={19} strokeWidth={activeTab === "Kegiatan" ? 2.5 : 2} />} 
                 label="EVENT" 
                 activeTab={activeTab} 
                 setActiveTab={setActiveTab} 
@@ -237,7 +268,7 @@ export default function Navbar({
               <MobileNavItem 
                 href="#whyjoin" 
                 id="WhyJoin" 
-                icon={<HelpCircle size={19} strokeWidth={isActiveTab("WhyJoin") ? 2.5 : 2} />} 
+                icon={<HelpCircle size={19} strokeWidth={activeTab === "WhyJoin" ? 2.5 : 2} />} 
                 label="WHY" 
                 activeTab={activeTab} 
                 setActiveTab={setActiveTab} 
@@ -245,7 +276,7 @@ export default function Navbar({
               <MobileNavItem 
                 href="#details" 
                 id="Details" 
-                icon={<ClipboardList size={19} strokeWidth={isActiveTab("Details") ? 2.5 : 2} />} 
+                icon={<ClipboardList size={19} strokeWidth={activeTab === "Details" ? 2.5 : 2} />} 
                 label="DETAILS" 
                 activeTab={activeTab} 
                 setActiveTab={setActiveTab} 
@@ -256,13 +287,9 @@ export default function Navbar({
       </AnimatePresence>
     </>
   );
-
-  function isActiveTab(tabId) {
-    return activeTab === tabId;
-  }
 }
 
-// ─── SUB-KOMPONEN ITEM NAV MOBILE (WARNA AKTIF COKELAT PREMIUM) ───
+// ─── SUB-KOMPONEN ITEM NAV MOBILE ───
 function MobileNavItem({ href, id, icon, label, activeTab, setActiveTab }) {
   const isActive = activeTab === id;
 
@@ -272,21 +299,18 @@ function MobileNavItem({ href, id, icon, label, activeTab, setActiveTab }) {
       onClick={() => setActiveTab(id)}
       className="flex-1 flex flex-col items-center justify-center relative pt-2 pb-1.5 min-w-[48px] select-none text-center transition-all duration-200"
     >
-      {/* Warna ikon berubah menjadi cokelat jika aktif */}
       <div className={`transition-all duration-300 ${
         isActive ? "text-[#6F4E37] scale-105" : "text-stone-400"
       }`}>
         {icon}
       </div>
 
-      {/* Warna teks berubah menjadi cokelat jika aktif */}
       <span className={`text-[9px] font-extrabold tracking-wider uppercase mt-1 transition-colors duration-300 ${
         isActive ? "text-[#6F4E37]" : "text-stone-400"
       }`}>
         {label}
       </span>
       
-      {/* Garis penanda bawah diubah warnanya menjadi cokelat premium */}
       {isActive && (
         <motion.div 
           layoutId="activeMobileLineIndicator" 

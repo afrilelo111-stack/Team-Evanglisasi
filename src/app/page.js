@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
-import Kegiatan from "@/components/Kegiatan";
+import Kegiatan from "@/components/kegiatan";
 import WhyJoin from "@/components/WhyJoin";
 import Footer from "@/components/Footer";
 

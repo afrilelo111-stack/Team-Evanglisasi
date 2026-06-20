@@ -6,7 +6,7 @@ import { ArrowUpRight, ChevronDown } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[url('/hero.jpg')] bg-cover bg-center">
+    <section id="#beranda" className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[url('/hero.jpg')] bg-cover bg-center">
       
       {/* Overlay Gradasi Premium */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/60 to-[#432e20]/40 z-0" />
