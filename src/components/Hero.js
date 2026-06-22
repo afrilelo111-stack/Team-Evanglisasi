@@ -22,8 +22,6 @@ const itemVariants = {
   }
 };
 
-// SOLUSI UTAMA: Mengeluarkan fungsi generate dari body komponen
-// Ini membuat fungsi murni & tidak memicu error linter "impure function during render"
 const generateParticles = (count = 15) => {
   return Array.from({ length: count }).map(() => {
     const size = Math.random() * 4 + 2;
@@ -40,11 +38,9 @@ const generateParticles = (count = 15) => {
 
 export default function Hero() {
   const [mounted, setMounted] = useState(false);
-  // Simpan data partikel langsung di state, diisi hanya setelah mounted
   const [particles, setParticles] = useState([]);
   
   useEffect(() => {
-    // SOLUSI UTAMA: Menggunakan requestAnimationFrame agar aman dari cascading renders
     const handle = requestAnimationFrame(() => {
       setParticles(generateParticles(15));
       setMounted(true);
@@ -58,23 +54,14 @@ export default function Hero() {
       id="beranda" 
       className="relative min-h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[#050302] select-none"
     >
-      {/* ─── VISUAL BACKGROUND LAYER ─── */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#050302] via-[#100B07] to-[#160E0A] z-0" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#030201_95%)] opacity-80 pointer-events-none z-0" />
-      <div className="absolute top-0 left-0 right-0 h-[22vh] bg-gradient-to-b from-[#030201] via-[#050302]/40 to-transparent pointer-events-none z-0" />
-      <div className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] md:w-[650px] h-[280px] md:h-[650px] bg-gradient-to-tr from-[#D4AF37]/8 via-[#AA7C11]/2 to-transparent blur-[140px] rounded-full pointer-events-none z-0 animate-pulse duration-[9000ms]" />
-      <div className="absolute -bottom-10 -left-10 w-[300px] h-[300px] bg-white/[0.02] blur-[100px] rounded-full pointer-events-none z-0 hidden md:block" />
+      {/* ─── VISUAL BACKGROUND LAYER (SOLID & REFINED) ─── */}
+      {/* Pola Grid Minimalis */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff001_1px,transparent_1px),linear-gradient(to_bottom,#ffffff001_1px,transparent_1px)] bg-[size:60px_60px] opacity-10 z-0 pointer-events-none" />
 
-      {/* Gradasi Putih Bawah Adaptive (Sesuai Navigasi bawah pada layout gambar) */}
-      <div className="absolute bottom-0 left-0 right-0 h-[28vh] bg-gradient-to-t from-white via-white/70 via-white/30 via-white/10 to-transparent pointer-events-none z-0" />
-      <div className="absolute bottom-0 left-0 right-0 h-[7vh] bg-white/40 pointer-events-none z-0 blur-xs" />
+      {/* Pendaran Cahaya Center Halus */}
+      <div className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] md:w-[650px] h-[280px] md:h-[650px] bg-[#D4AF37]/5 blur-[140px] rounded-full pointer-events-none z-0 animate-pulse duration-[9000ms]" />
 
-      <div 
-        className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff001_1px,transparent_1px),linear-gradient(to_bottom,#ffffff001_1px,transparent_1px)] bg-[size:60px_60px] opacity-10 z-0 pointer-events-none"
-        style={{ maskImage: 'linear-gradient(to bottom, transparent 5%, black 25%, black 75%, transparent 95%)', WebkitMaskImage: 'linear-gradient(to bottom, transparent 5%, black 25%, black 75%, transparent 95%)' }}
-      />
-
-      {/* Partikel Emas Melayang Bebas */}
+      {/* Partikel Emas Melayang */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         {mounted && particles.map((p, i) => (
           <motion.div
@@ -84,7 +71,7 @@ export default function Hero() {
               width: `${p.size}px`,
               height: `${p.size}px`,
               left: `${p.left}%`,
-              bottom: "22%",
+              bottom: "10%",
               filter: p.blur,
             }}
             animate={{
@@ -190,10 +177,10 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* INDIKATOR SCROLL DOWN */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-1.5 text-stone-600/80 transition-all">
+      {/* INDIKATOR SCROLL DOWN DESKTOP */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-1.5 text-stone-500/50">
         <span className="text-[7px] font-bold tracking-[0.25em] uppercase">Scroll Down</span>
-        <ChevronDown size={12} className="text-[#B38F24] animate-bounce" />
+        <ChevronDown size={12} className="text-[#D4AF37] animate-bounce" />
       </div>
     </section>
   );
