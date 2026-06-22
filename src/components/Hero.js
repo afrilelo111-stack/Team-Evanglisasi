@@ -1,134 +1,186 @@
 "use client";
 
+import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ArrowUpRight, ChevronDown } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Sparkles } from "lucide-react";
+
+// Variasi animasi untuk efek transisi teks yang mengalir (Staggered)
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12, delayChildren: 0.15 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { type: "spring", stiffness: 100, damping: 15 } 
+  }
+};
 
 export default function Hero() {
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Membekukan nilai acak partikel agar tidak memicu re-render berkali-kali
+  const particleData = useMemo(() => {
+    return Array.from({ length: 15 }).map(() => {
+      const size = Math.random() * 4 + 2;
+      return {
+        size,
+        left: Math.random() * 100,
+        drift: Math.random() * 24 - 12,
+        delay: Math.random() * 4,
+        duration: Math.random() * 6 + 8,
+        blur: size > 4 ? "blur(1px)" : "blur(0.2px)"
+      };
+    });
+  }, []);
+
   return (
     <section 
       id="beranda" 
-      className="relative min-h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[url('/hero.webp')] bg-cover bg-center select-none"
+      className="relative min-h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[#0A0604] select-none"
     >
-      {/* ─── OVERLAY GRADASI & VIGNETTE KONTRAST TINGGI ─── */}
-      {/* Overlay Hitam Komprehensif */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/50 to-[#2A1D15] z-0" />
+      {/* ─── VISUAL BACKGROUND LAYER (ULTRA OPTIMIZED) ─── */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0A0604] via-[#140D08] to-[#1F140E] z-0" />
       
-      {/* Efek Vignette Sinematik (Radial Glow) */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(0,0,0,0.85))] z-0" />
+      {/* Grid pattern yang diperhalus opacity-nya */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff005_1px,transparent_1px),linear-gradient(to_bottom,#ffffff005_1px,transparent_1px)] bg-[size:60px_60px] opacity-20 z-0" />
 
-      {/* Pendaran Ambient Emas Halus */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#D4AF37]/5 blur-[150px] rounded-full pointer-events-none z-0" />
+      {/* Pendaran Cahaya Utama - Memakai CSS Pulse murni (Sangat Ringan dibanding JS animation) */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3 w-[280px] md:w-[600px] h-[280px] md:h-[600px] bg-gradient-to-tr from-[#D4AF37]/15 via-[#AA7C11]/5 to-transparent blur-[100px] md:blur-[140px] rounded-full pointer-events-none z-0 animate-pulse duration-[7000ms]" />
 
-      {/* ─── KONTEN UTAMA ─── */}
-      <div className="relative z-10 text-center text-white px-5 max-w-3xl mx-auto flex flex-col items-center pt-24 pb-12">
+      {/* Partikel Emas Melayang Bebas dengan Akselerasi GPU */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {mounted && particleData.map((p, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-gradient-to-b from-[#FFF5D6] via-[#D4AF37] to-transparent will-change-transform"
+            style={{
+              width: `${p.size}px`,
+              height: `${p.size}px`,
+              left: `${p.left}%`,
+              bottom: "-10%",
+              filter: p.blur,
+            }}
+            animate={{
+              y: ["0vh", "-115vh"],
+              x: ["0px", `${p.drift}px`],
+              opacity: [0, 0.8, 0.4, 0],
+            }}
+            transition={{
+              duration: p.duration,
+              repeat: Infinity,
+              ease: "linear",
+              delay: p.delay,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* ─── KONTEN UTAMA (STAGGERED MULTI-ELEMENT) ─── */}
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="relative z-10 text-center text-white px-5 max-w-4xl mx-auto flex flex-col items-center pt-20 pb-12"
+      >
         
-        {/* LOGO CONTAINER DENGAN PREMIUM GLOW */}
+        {/* LOGO CONTAINER DENGAN HALO GLOW */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.85, y: -15 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 100, damping: 16, delay: 0.2 }}
-          whileTap={{ scale: 0.95 }}
-          className="mb-5 relative group cursor-pointer"
+          variants={itemVariants}
+          className="mb-6 relative group cursor-pointer"
         >
-          {/* Lapisan Glow Emas 1: Inti */}
-          <div className="absolute inset-0 bg-[#D4AF37]/30 blur-2xl rounded-full scale-100 animate-pulse duration-[3000ms]" />
-          
-          {/* Lapisan Glow Emas 2: Pendaran Luas (Mix Blend Mode) */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#D4AF37]/15 to-[#AA7C11]/25 blur-3xl rounded-full scale-160 group-hover:scale-175 transition-transform duration-700 mix-blend-screen" />
-          
-          <div className="relative w-28 h-28 md:w-32 md:h-32 flex items-center justify-center">
+          <div className="absolute inset-0 bg-[#D4AF37]/15 blur-xl rounded-full scale-90 group-hover:scale-110 transition-transform duration-500" />
+          <div className="relative w-24 h-24 md:w-32 md:h-32 flex items-center justify-center bg-stone-950/40 rounded-full border border-white/5 backdrop-blur-xs">
             <Image 
               src="/logo/logo1.png" 
               alt="Logo TE SMKN 3" 
               fill 
-              sizes="(max-width: 768px) 112px, 128px"
-              className="object-contain filter drop-shadow-[0_8px_20px_rgba(212,175,55,0.4)] drop-shadow-[0_15px_35px_rgba(0,0,0,0.5)] group-hover:scale-105 transition-all duration-500"
+              sizes="(max-width: 768px) 96px, 128px"
+              className="object-contain p-2 filter drop-shadow-[0_8px_16px_rgba(212,175,55,0.25)] transition-transform duration-500 group-hover:scale-105"
               priority
             />
           </div>
         </motion.div>
 
         {/* SUB-HEADER SEKOLAH */}
-        <motion.p 
-          initial={{ opacity: 0, y: 5 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-[10px] md:text-xs font-black tracking-[0.4em] text-[#D4AF37] uppercase mb-2 drop-shadow-md"
+        <motion.div 
+          variants={itemVariants}
+          className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-white/[0.02] border border-white/5"
         >
-          SMK Negeri 3 Manado
-        </motion.p>
+          <Sparkles size={11} className="text-[#D4AF37] animate-pulse" />
+          <span className="text-[9px] md:text-[11px] font-black tracking-[0.3em] text-[#D4AF37] uppercase">
+            SMK Negeri 3 Manado
+          </span>
+        </motion.div>
 
-        {/* JUDUL UTAMA DENGAN GRADASI SINEMATIK PREMIUM */}
+        {/* JUDUL UTAMA */}
         <motion.h1 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-4xl md:text-7xl font-black tracking-tight leading-[1.1] mb-5 Text-white"
+          variants={itemVariants}
+          className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight leading-[1.1] mb-5 text-white"
         >
-          TEAM <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFF5D6] to-[#D4AF37] filter drop-shadow-[0_4px_15px_rgba(212,175,55,0.2)]">EVANGELISASI</span>
+          TEAM <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFF8E7] to-[#D4AF37] drop-shadow-[0_2px_8px_rgba(212,175,55,0.15)]">EVANGELISASI</span>
         </motion.h1>
 
-        {/* TAGLINE VISI (FONT SERIF UNTUK KESAN LUXURY) */}
+        {/* TAGLINE VISI */}
         <motion.p 
-          initial={{ opacity: 0, y: 5 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.7 }}
-          className="text-sm md:text-xl font-serif italic text-stone-200/95 max-w-xl px-2 drop-shadow-sm"
+          variants={itemVariants}
+          className="text-base md:text-xl font-serif italic text-stone-200/90 max-w-2xl px-2 tracking-wide"
         >
           &ldquo;Beri Yang Terbaik Untuk Kemuliaan Tuhan&rdquo;
         </motion.p>
 
         {/* DESKRIPSI RINGKAS */}
         <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
-          className="mt-5 text-xs md:text-sm max-w-md text-stone-300/80 leading-relaxed font-medium px-4"
+          variants={itemVariants}
+          className="mt-4 text-xs md:text-sm max-w-md text-stone-400/80 leading-relaxed font-medium px-4"
         >
-          Komunitas asyik siswa Kristen untuk saling bertumbuh iman, mengasah talenta, dan bawa dampak positif di sekolah.
+          Komunitas asyik siswa Kristen untuk saling bertumbuh iman, mengasah talenta, dan membawa dampak positif yang nyata di lingkungan sekolah.
         </motion.p>
 
-        {/* ─── TOMBOL CALL TO ACTION (MOBILE-FIRST DRIVEN) ─── */}
+        {/* TOMBOL CALL TO ACTION */}
         <motion.div 
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 1.1 }}
-          className="mt-10 flex flex-col sm:flex-row gap-4 justify-center w-full max-w-[280px] sm:max-w-none px-2"
+          variants={itemVariants}
+          className="mt-8 flex flex-col sm:flex-row gap-3 justify-center w-full max-w-[250px] sm:max-w-none px-2 relative z-20"
         >
-          {/* Tombol Utama (Gabung) */}
           <motion.a
-            whileTap={{ scale: 0.96 }}
+            whileHover={{ scale: 1.02, y: -1 }}
+            whileTap={{ scale: 0.98 }}
             href="https://forms.gle/your-form-link"
             target="_blank"
             rel="noopener noreferrer"
-            className="group px-7 py-3.5 rounded-full font-black text-xs tracking-widest uppercase bg-gradient-to-r from-[#D4AF37] to-[#B38F24] hover:brightness-110 text-white shadow-[0_12px_30px_rgba(212,175,55,0.25)] transition-all duration-200 flex items-center justify-center gap-2 border border-[#D4AF37]/30"
+            className="group px-7 py-3.5 rounded-full font-black text-xs tracking-widest uppercase bg-gradient-to-r from-[#D4AF37] to-[#B38F24] text-white shadow-[0_8px_24px_rgba(212,175,55,0.2)] hover:shadow-[0_12px_32px_rgba(212,175,55,0.3)] transition-all duration-200 flex items-center justify-center gap-2"
           >
             Gabung Sekarang
             <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
           </motion.a>
 
-          {/* Tombol Kedua (Tentang) */}
           <motion.a 
-            whileTap={{ scale: 0.96 }}
+            whileHover={{ scale: 1.02, y: -1 }}
+            whileTap={{ scale: 0.98 }}
             href="#about" 
-            className="px-7 py-3.5 rounded-full font-bold text-xs tracking-widest uppercase border border-white/20 bg-white/[0.05] backdrop-blur-md text-white hover:bg-white hover:text-black hover:border-white shadow-xl transition-all duration-300 flex items-center justify-center"
+            className="px-7 py-3.5 rounded-full font-bold text-xs tracking-widest uppercase border border-white/10 bg-white/[0.01] text-white hover:bg-white hover:text-black transition-all duration-200 flex items-center justify-center"
           >
             Tentang TE
           </motion.a>
         </motion.div>
-      </div>
-
-      {/* INDIKATOR SCROLL DOWN (HANYA MUNCUL DI DESKTOP) */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 0.7, 0], y: [0, 5, 0] }}
-        transition={{ repeat: Infinity, duration: 2, delay: 1.6 }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-1.5 text-stone-400/50 selection:bg-transparent"
-      >
-        <span className="text-[8px] font-bold tracking-[0.3em] uppercase">Scroll Down</span>
-        <ChevronDown size={14} className="text-[#D4AF37]" />
       </motion.div>
+
+      {/* INDIKATOR SCROLL DOWN DESKTOP */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-1.5 text-stone-500/40">
+        <span className="text-[7px] font-bold tracking-[0.25em] uppercase">Scroll Down</span>
+        <ChevronDown size={12} className="text-[#D4AF37] animate-bounce" />
+      </div>
     </section>
   );
 }
