@@ -66,7 +66,7 @@ export default function Kegiatan() {
 
     return (
         <section
-            id="kegiatan"
+            id="/kegiatan"
             className="relative py-16 md:py-32 bg-[#FDFBF7] text-[#2C2520] overflow-hidden selection:bg-[#6F4E37] selection:text-white"
         >
             {/* ─── PREMIUM BACKGROUND TEXTURE ─── */}

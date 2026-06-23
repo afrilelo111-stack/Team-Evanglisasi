@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import Image from "next/image"; 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation"; // Impor pendeteksi halaman aktif
 
 export default function Navbar({ 
   showMobileNav, 
@@ -22,6 +23,7 @@ export default function Navbar({
   const [show, setShow] = useState(false); 
   const [isReady, setIsReady] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
+  const pathname = usePathname(); // Ambil path URL saat ini (misal: /about)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -35,13 +37,18 @@ export default function Navbar({
       if (!isReady) return;
       const currentScroll = window.scrollY;
 
-      // 1. LOGIKA VISIBILITAS NAVBAR
+      // 1. LOGIKA VISIBILITAS NAVBAR & AKURASI SHIFTING TAB ATAS
       if (currentScroll <= 30) {
         setIsAtTop(true);
         setShow(true);
-        // UX PENTING: Jika di paling atas sekali, otomatis kunci tab ke Beranda
-        setActiveTab("Beranda");
-        return; // Hentikan kalkulasi loop di bawah jika sudah di paling atas
+        
+        // JIKA DI HALAMAN /about, MAKA TETAPKAN AKTIF PADA DETAIL, BUKAN BERANDA
+        if (pathname === "/about") {
+          setActiveTab("detail");
+        } else {
+          setActiveTab("beranda");
+        }
+        return; 
       } else {
         setIsAtTop(false);
         if (currentScroll > lastScroll && currentScroll > 120) {
@@ -52,38 +59,30 @@ export default function Navbar({
       }
       lastScroll = currentScroll;
 
-      // 2. LOGIKA AUTO-ACTIVE TAB BERDASARKAN SCROLL (LEBIH AKURAT)
-      const sections = ["Beranda", "Tentang", "Kegiatan", "WhyJoin", "Details"];
-      
-      // Menggunakan pertengahan layar (viewport) agar perpindahan tab terasa pas saat dibaca
+      // 2. SINKRONISASI LOGIKA AUTO-ACTIVE BERDASARKAN SCROLL ELEMEN
+      const sections = ["beranda", "about", "sections", "kegiatan", "whyjoin"];
       const scrollPosition = currentScroll + (window.innerHeight / 3);
 
       for (const id of sections) {
-        const htmlIdMap = {
-          Beranda: "beranda",
-          Tentang: "tentang",
-          Kegiatan: "kegiatan",
-          WhyJoin: "whyjoin",
-          Details: "details"
-        };
-        
-        const targetId = htmlIdMap[id];
-        const element = document.getElementById(targetId);
+        const element = document.getElementById(id);
         
         if (element) {
           const top = element.offsetTop;
           const height = element.offsetHeight;
           
-          // Cek apakah posisi scroll sekarang berada di dalam rentang elemen ini
           if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveTab(id);
-            break; // Keluar dari loop jika sudah menemukan section yang aktif
+            // Jika melewati area kontras bento tentang kami atau seksi pelayanan
+            if (id === "about" || id === "sections" || pathname === "/about") {
+              setActiveTab("detail");
+            } else {
+              setActiveTab(id);
+            }
+            break; 
           }
         }
       }
     };
 
-    // Jalankan sekali saat komponen dipasang untuk sinkronisasi awal
     handleScroll();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -91,14 +90,13 @@ export default function Navbar({
       clearTimeout(timer);
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [isReady, setActiveTab]);
+  }, [isReady, setActiveTab, pathname]);
 
   const menuItems = [
-    { id: "Beranda", label: "Beranda", href: "#beranda", icon: House },
-    { id: "Tentang", label: "Tentang", href: "#about", icon: BookOpen },
-    { id: "Kegiatan", label: "Kegiatan", href: "#kegiatan", icon: CalendarDays },
-    { id: "WhyJoin", label: "Mengapa", href: "#whyjoin", icon: HelpCircle },
-    { id: "Details", label: "Detail", href: "#details", icon: ClipboardList },
+    { id: "beranda", label: "Beranda", href: "/", icon: House },
+    { id: "kegiatan", label: "Kegiatan", href: "/#kegiatan", icon: CalendarDays },
+    { id: "whyjoin", label: "Mengapa", href: "/#whyjoin", icon: HelpCircle },
+    { id: "detail", label: "Detail", href: "/about", icon: ClipboardList },
   ];
 
   if (!isReady) return null;
@@ -177,7 +175,7 @@ export default function Navbar({
                   isAtTop ? "bg-white/[0.04]" : "bg-[#6F4E37]/5 border border-[#6F4E37]/10"
                 }`}>
                   {menuItems.map((item) => {
-                    const isActive = activeTab === item.id;
+                    const isActive = activeTab?.toLowerCase() === item.id;
                     return (
                       <li key={item.id} className="relative">
                         <Link
@@ -243,7 +241,7 @@ export default function Navbar({
             className="md:hidden fixed left-1/2 bottom-5 z-[9999] w-[92vw] max-w-md bg-white/95 backdrop-blur-2xl border border-stone-200/70 shadow-[0_20px_50px_rgba(111,78,55,0.15)] rounded-[2rem] p-2 flex justify-between items-center gap-1 select-none"
           >
             {menuItems.map((item) => {
-              const isActive = activeTab === item.id;
+              const isActive = activeTab?.toLowerCase() === item.id;
               const IconComponent = item.icon;
 
               return (

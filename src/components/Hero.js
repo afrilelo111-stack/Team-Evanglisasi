@@ -51,7 +51,7 @@ export default function Hero() {
 
   return (
     <section 
-      id="beranda" 
+      id="/beranda" 
       className="relative min-h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[#050302] select-none"
     >
       {/* ─── VISUAL BACKGROUND LAYER (SOLID & REFINED) ─── */}
@@ -146,7 +146,7 @@ export default function Hero() {
           variants={itemVariants}
           className="mt-4 text-xs md:text-sm max-w-md text-stone-400/80 leading-relaxed font-medium px-4"
         >
-          Komunitas asyik siswa Kristen untuk saling bertumbuh iman, mengasah talenta, dan membawa dampak positif yang nyata di lingkungan sekolah.
+          Komunitas siswa Kristen untuk saling bertumbuh iman, mengasah talenta, dan membawa dampak positif yang nyata di lingkungan sekolah.
         </motion.p>
 
         {/* TOMBOL CALL TO ACTION */}

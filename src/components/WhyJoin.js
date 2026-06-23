@@ -49,7 +49,7 @@ export default function WhyJoin() {
   };
 
   return (
-    <section id="whyjoin" className="relative py-24 md:py-36 bg-[#FDFBF7] text-[#2C2520] overflow-hidden selection:bg-[#6F4E37] selection:text-white">
+    <section id="/whyjoin" className="relative py-24 md:py-36 bg-[#FDFBF7] text-[#2C2520] overflow-hidden selection:bg-[#6F4E37] selection:text-white">
       
       {/* ─── GRID ACCENT BACKGROUND ─── */}
       <div className="absolute inset-0 opacity-[0.012] bg-[radial-gradient(#6f4e37_1px,transparent_1px)] [background-size:32px_32px] pointer-events-none" />
