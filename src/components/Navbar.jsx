@@ -35,9 +35,13 @@ export default function Navbar({
       if (!isReady) return;
       const currentScroll = window.scrollY;
 
+      // 1. LOGIKA VISIBILITAS NAVBAR
       if (currentScroll <= 30) {
         setIsAtTop(true);
         setShow(true);
+        // UX PENTING: Jika di paling atas sekali, otomatis kunci tab ke Beranda
+        setActiveTab("Beranda");
+        return; // Hentikan kalkulasi loop di bawah jika sudah di paling atas
       } else {
         setIsAtTop(false);
         if (currentScroll > lastScroll && currentScroll > 120) {
@@ -48,11 +52,13 @@ export default function Navbar({
       }
       lastScroll = currentScroll;
 
-      // LOGIKA AUTO-ACTIVE TAB BERDASARKAN SCROLL
+      // 2. LOGIKA AUTO-ACTIVE TAB BERDASARKAN SCROLL (LEBIH AKURAT)
       const sections = ["Beranda", "Tentang", "Kegiatan", "WhyJoin", "Details"];
-      const scrollPosition = currentScroll + 230;
+      
+      // Menggunakan pertengahan layar (viewport) agar perpindahan tab terasa pas saat dibaca
+      const scrollPosition = currentScroll + (window.innerHeight / 3);
 
-      sections.forEach((id) => {
+      for (const id of sections) {
         const htmlIdMap = {
           Beranda: "beranda",
           Tentang: "tentang",
@@ -67,12 +73,18 @@ export default function Navbar({
         if (element) {
           const top = element.offsetTop;
           const height = element.offsetHeight;
+          
+          // Cek apakah posisi scroll sekarang berada di dalam rentang elemen ini
           if (scrollPosition >= top && scrollPosition < top + height) {
             setActiveTab(id);
+            break; // Keluar dari loop jika sudah menemukan section yang aktif
           }
         }
-      });
+      }
     };
+
+    // Jalankan sekali saat komponen dipasang untuk sinkronisasi awal
+    handleScroll();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
@@ -93,7 +105,7 @@ export default function Navbar({
 
   return (
     <>
-      {/* ─── TOMBOL INSTAN PEMICU NAVIGASI (MOBILE & DESKTOP) ─── */}
+      {/* ─── TOMBOL INSTAN PEMICU NAVIGASI (MOBILE) ─── */}
       <AnimatePresence>
         {!show && !isAtTop && (
           <motion.button
@@ -220,7 +232,7 @@ export default function Navbar({
         </AnimatePresence>
       </div>
 
-      {/* ─── 2. PREMIUM BOTTOM FLOATING DOCK (MOBILE EXCLUSIVE) ─── */}
+      {/* ─── 2. PREMIUM BOTTOM FLOATING DOCK (MOBILE) ─── */}
       <AnimatePresence>
         {show && (
           <motion.div
@@ -241,7 +253,6 @@ export default function Navbar({
                   onClick={() => setActiveTab(item.id)}
                   className="flex-1 flex flex-col items-center justify-center relative py-2.5 min-w-[55px] text-center transition-all duration-200"
                 >
-                  {/* Efek Indikator Kapsul Meluncur Halus */}
                   {isActive && (
                     <motion.div
                       layoutId="activeMobileIndicator"
@@ -250,12 +261,10 @@ export default function Navbar({
                     />
                   )}
 
-                  {/* Icon Konten */}
                   <div className={`transition-all duration-300 ${isActive ? "text-white scale-110" : "text-stone-400"}`}>
                     <IconComponent size={20} strokeWidth={isActive ? 2.5 : 2} />
                   </div>
 
-                  {/* Teks Keterangan Menu */}
                   <span className={`text-[10px] font-bold tracking-wide mt-1 transition-colors duration-300 ${
                     isActive ? "text-white font-extrabold" : "text-stone-500"
                   }`}>
