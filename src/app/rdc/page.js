@@ -3,12 +3,13 @@
 import { motion } from "framer-motion";
 import { loginWithEmail } from "./actions";
 import { useSearchParams } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState, useTransition, Suspense } from "react"; // Tambahkan Suspense
 import Image from "next/image";
 import Link from "next/link";
 import { LogIn, Mail, Lock, AlertCircle, Eye, EyeOff, Loader2, CheckCircle2 } from "lucide-react";
 
-export default function LoginPage() {
+// ─── 1. KOMPONEN ISI: MENANGANI FORM & SEARCH PARAMS ───
+function LoginContent() {
   const searchParams = useSearchParams();
   const errorMessage = searchParams.get("error");
   
@@ -75,7 +76,7 @@ export default function LoginPage() {
           <div className="mt-10 grid grid-cols-2 gap-4 border-t border-white/10 pt-8">
             <div className="flex items-center gap-2.5 text-stone-200 text-xs font-semibold">
               <CheckCircle2 size={16} className="text-[#D4AF37]" />
-              <span>Sistem</span>
+              <span>Sistem Terenkripsi</span>
             </div>
             <div className="flex items-center gap-2.5 text-stone-200 text-xs font-semibold">
               <CheckCircle2 size={16} className="text-[#D4AF37]" />
@@ -222,7 +223,24 @@ export default function LoginPage() {
           &copy; 2026 TE SMKN 3 Manado.
         </div>
       </div>
-
     </div>
+  );
+}
+
+{/* ─── 2. KOMPONEN UTAMA (DIEXPORT): DIBUNGKUS SUSPENSE BOUNDARY ─── */}
+export default function LoginPage() {
+  return (
+    <Suspense 
+      fallback={
+        <div className="min-h-screen bg-[#FDFDFD] flex items-center justify-center font-sans">
+          <div className="flex flex-col items-center gap-3 text-slate-500">
+            <Loader2 size={28} className="animate-spin text-[#6F4E37]" />
+            <span className="text-xs font-bold tracking-widest text-[#6F4E37]/80 uppercase">Menyiapkan Portal...</span>
+          </div>
+        </div>
+      }
+    >
+      <LoginContent />
+    </Suspense>
   );
 }
