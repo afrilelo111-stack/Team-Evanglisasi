@@ -119,7 +119,7 @@ export default function WhyJoin() {
           })}
         </motion.div>
 
-        {/* ─── HERO CALL TO ACTION (INTERAKTIF & MAHAL) ─── */}
+        {/* ─── HERO CALL TO ACTION (INTERAKTIF & Mahal) ─── */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
