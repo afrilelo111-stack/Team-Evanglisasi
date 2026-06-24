@@ -140,7 +140,7 @@ export default function WhyJoin() {
           </div>
           
           <button 
-            onClick={() => window.open("https://link-pendaftaran-kamu.com", "_blank")}
+            onClick={() => window.open("https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform", "_blank")}
             className="group shrink-0 relative inline-flex items-center gap-3 px-8 py-4 bg-[#D4AF37] text-stone-900 font-black text-sm rounded-xl shadow-lg hover:bg-white transition-all duration-300 w-full md:w-auto justify-center"
           >
             Isi Formulir Pendaftaran

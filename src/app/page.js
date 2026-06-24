@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import About from "@/components/About";
+import About from "@/components/beranda";
 import Kegiatan from "@/components/kegiatan";
 import WhyJoin from "@/components/WhyJoin";
 import Footer from "@/components/Footer";

@@ -23,7 +23,7 @@ export default function AboutEvangelisasi() {
   };
 
   return (
-    <section id="/beranda" className="relative py-20 md:py-28 bg-[#FDFBF7] text-[#2C2520] overflow-hidden selection:bg-[#6F4E37] selection:text-white">
+    <section id="/#about" className="relative py-20 md:py-28 bg-[#FDFBF7] text-[#2C2520] overflow-hidden selection:bg-[#6F4E37] selection:text-white">
       
       {/* ─── PREMIUM BACKGROUND TEXTURE & GRID ─── */}
       <div className="absolute inset-0 opacity-[0.012] bg-[radial-gradient(#6f4e37_1px,transparent_1px)] [background-size:32px_32px] pointer-events-none" />
