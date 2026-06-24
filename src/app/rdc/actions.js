@@ -20,5 +20,5 @@ export async function loginWithEmail(formData) {
   }
 
   // Jika sukses, arahkan ke halaman utama atau dashboard
-  return redirect("/beranda");
+  return redirect("/rdc/dashboard");
 }

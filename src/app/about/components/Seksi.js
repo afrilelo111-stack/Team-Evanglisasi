@@ -31,80 +31,78 @@ export default function SeksiPelayananSection() {
   };
 
   const seksiList = [
-    {
-      icon: Flame,
-      title: "Seksi Ibadah",
-      tagline: "Jantung persekutuan kita",
-      tasks: [
-        "Menyusun tema & tata ibadah persekutuan",
-        "Memilih lagu pujian & penyembahan",
-        "Mengoordinasikan WL, Singer, & Pemusik"
-      ],
-      theme: "hover:border-stone-400 hover:shadow-amber-500/[0.04]",
-      iconColor: "text-amber-600 bg-amber-50 border-amber-100"
-    },
-    {
-      icon: HeartHandshake,
-      title: "Seksi Doa & Sharing",
-      tagline: "Menjaga kehangatan iman",
-      tasks: [
-        "Menjadi menara doa bagi seluruh tim",
-        "Membuat ruang curhat & diskusi hangat",
-        "Saling mendukung pertumbuhan rohani"
-      ],
-      theme: "hover:border-stone-400 hover:shadow-rose-500/[0.04]",
-      iconColor: "text-rose-600 bg-rose-50 border-rose-100"
-    },
-    {
-      icon: Palette,
-      title: "Seksi Kreativitas",
-      tagline: "Pusat ide & dekorasi",
-      tasks: [
-        "Merancang dekorasi panggung & ruang",
-        "Membuat konsep acara seru & baksos",
-        "Mengembangkan ide merchandise kreatif"
-      ],
-      theme: "hover:border-stone-400 hover:shadow-purple-500/[0.04]",
-      iconColor: "text-purple-600 bg-purple-50 border-purple-100"
-    },
-    {
-      icon: Camera,
-      title: "Seksi Dokumentasi",
-      tagline: "Wajah digital pelayanan",
-      tasks: [
-        "Mengabadikan momen lewat foto & video",
-        "Mengelola media sosial komunitas resmi",
-        "Membuat desain konten rohani kreatif"
-      ],
-      theme: "hover:border-stone-400 hover:shadow-emerald-500/[0.04]",
-      iconColor: "text-emerald-600 bg-emerald-50 border-emerald-100"
-    },
-    {
-      icon: Megaphone,
-      title: "Seksi Hubmas",
-      tagline: "Jembatan relasi tim",
-      tasks: [
-        "Menghubungkan tim dengan sekolah & guru",
-        "Menyebarkan info & undangan ibadah",
-        "Merangkul siswa Kristen untuk bergabung"
-      ],
-      theme: "hover:border-stone-400 hover:shadow-blue-500/[0.04]",
-      iconColor: "text-blue-600 bg-blue-50 border-blue-100"
-    },
-    {
-      icon: Wrench,
-      title: "Seksi Perlengkapan",
-      tagline: "Tulang punggung teknis",
-      tasks: [
-        "Menyiapkan ruang ibadah & tempat duduk",
-        "Mengatur sound system, kabel, & musik",
-        "Menyediakan logistik fisik setiap acara"
-      ],
-      theme: "hover:border-stone-400 hover:shadow-stone-500/[0.04]",
-      iconColor: "text-stone-700 bg-stone-100 border-stone-200"
-    }
+  {
+    icon: Flame,
+    title: "Sie Ibadah",
+    tagline: "Penyusun Acara & Koordinator Petugas Ibadah",
+    tasks: [
+      "Bertanggung jawab penuh dalam merancang dan mengatur seluruh susunan acara ibadah.",
+      "Membuat jadwal petugas ibadah mulai dari WL, Singers, Pemusik (Gitar & Cajon), Multimedia, Rebana, Banners, hingga Tim Paduan Suara.",
+      "Mengatur tim khusus untuk menjaga keamanan dan ketertiban supaya ibadah di sekolah berjalan tenang dan khusyuk."
+    ],
+    theme: "hover:border-stone-400 hover:shadow-amber-500/[0.04]",
+    iconColor: "text-amber-600 bg-amber-50 border-amber-100"
+  },
+  {
+    icon: Camera,
+    title: "Sie Dokum",
+    tagline: "Penjaga Memori & Jejak Digital Pelayanan",
+    tasks: [
+      "Mengabadikan setiap momen berharga dan aktivitas esensial pelayanan melalui dokumentasi foto serta video berkualitas tinggi.",
+      "Fokus mendokumentasikan agenda rutin komunitas seperti ibadah Jumat, persekutuan doa pagi, doa pulang sekolah, hingga sesi latihan bersama.",
+      "Mengelola aset dokumentasi sebagai bahan publikasi rohani yang kreatif, inspiratif, dan membangun."
+    ],
+    theme: "hover:border-stone-400 hover:shadow-emerald-500/[0.04]",
+    iconColor: "text-emerald-600 bg-emerald-50 border-emerald-100"
+  },
+  {
+    icon: Palette,
+    title: "Sie Kreativitas",
+    tagline: "Pusat Pelatihan & Pengembang Bakat",
+    tasks: [
+      "Mengatur jadwal giliran pelayanan untuk tim WL, Singers, Rebana, hingga Banners.",
+      "Mengadakan latihan rutin setiap hari Senin dan Jumat (vokal, tarian rebana/banners, dan alat musik).",
+      "Fokus melatih dan mengembangkan bakat teman-teman agar semakin siap dan percaya diri dalam melayani."
+    ],
+    theme: "hover:border-stone-400 hover:shadow-purple-500/[0.04]",
+    iconColor: "text-purple-600 bg-purple-50 border-purple-100"
+  },
+  {
+    icon: Wrench,
+    title: "Sie Perlengkapan",
+    tagline: "Garda Terdepan Kesiapan Teknis & Logistik",
+    tasks: [
+      "Mempersiapkan dan memastikan semua peralatan teknis siap digunakan untuk ibadah Jumat maupun ibadah lainnya.",
+      "Hadir lebih awal di lokasi pelayanan guna melakukan pengecekan alat dan *sound check* demi kelancaran ibadah.",
+      "Bertanggung jawab penuh dalam merapikan dan mengembalikan seluruh peralatan ke tempat semula setelah ibadah selesai."
+    ],
+    theme: "hover:border-stone-400 hover:shadow-stone-500/[0.04]",
+    iconColor: "text-stone-700 bg-stone-100 border-stone-200"
+  },
+{
+  icon: HeartHandshake,
+  title: "Sie Doa & Sharing",
+  tagline: "Sahabat Curhat & Teman Berdoa",
+  tasks: [
+    "Bertanggung jawab penuh dalam membuat, menyusun, dan mengatur jadwal petugas doa bersama yang dilaksanakan setiap pagi sebelum masuk kelas serta sore hari setelah selesai jam pulang sekolah.",
+    "Mengadakan acara kumpul santai setiap awal bulan untuk tempat berbagi cerita bersyukur sekaligus saling mendoakan kalau ada masalah."
+  ],
+  theme: "hover:border-stone-400 hover:shadow-rose-500/[0.04]",
+  iconColor: "text-rose-600 bg-rose-50 border-rose-100"
+},
+  {
+    icon: Megaphone,
+    title: "Sie Humas",
+    tagline: "Jembatan Informasi & Penggerak Multi-Relasi",
+    tasks: [
+      "Membangun jalur komunikasi yang interaktif, inklusif, dan responsif guna menyampaikan informasi terupdate kepada seluruh pengurus.",
+      "Menggandeng dan mengundang siswa-siswi Kristen sekolah untuk bersekutu bersama dalam ibadah rutin yang digelar setiap hari Jumat.",
+      "Mengelola dan menginformasikan pemetaan lokasi ibadah rutin yang dilaksanakan di kediaman rumah siswa secara bergantian."
+    ],
+    theme: "hover:border-stone-400 hover:shadow-blue-500/[0.04]",
+    iconColor: "text-blue-600 bg-blue-50 border-blue-100"
+  }
   ];
-
   return (
     <section 
       id="sections" 

@@ -157,7 +157,7 @@ export default function Hero() {
           <motion.a
             whileHover={{ scale: 1.03, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            href="https://forms.gle/your-form-link"
+            href="https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor"
             target="_blank"
             rel="noopener noreferrer"
             className="group px-8 py-4 rounded-full font-black text-xs tracking-widest uppercase bg-gradient-to-r from-[#D4AF37] to-[#B38F24] text-white shadow-[0_8px_24px_rgba(212,175,55,0.2)] hover:shadow-[0_16px_36px_rgba(212,175,55,0.35)] transition-all duration-300 flex items-center justify-center gap-2"
