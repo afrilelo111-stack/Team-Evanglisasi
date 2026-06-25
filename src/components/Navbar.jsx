@@ -5,92 +5,99 @@ import {
   ChevronDown, 
   ArrowRight, 
   House, 
-  BookOpen, 
   CalendarDays, 
   HelpCircle, 
   ClipboardList 
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image"; 
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation"; // Impor pendeteksi halaman aktif
+import { useEffect, useState, useCallback, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 export default function Navbar({ 
-  showMobileNav, 
   activeTab, 
   setActiveTab 
 }) {
   const [show, setShow] = useState(false); 
   const [isReady, setIsReady] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
-  const pathname = usePathname(); // Ambil path URL saat ini (misal: /about)
+  const pathname = usePathname();
+  
+  // Menggunakan useRef untuk melacak posisi scroll sebelumnya tanpa memicu siklus render ulang ekstra
+  const lastScrollY = useRef(0);
 
+  // Memastikan inisialisasi awal berjalan mulus setelah komponen terpasang
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsReady(true);
       setShow(true);
-    }, 1500); 
+    }, 1000); 
+    return () => clearTimeout(timer);
+  }, []);
 
-    let lastScroll = 0;
+  // Memisahkan fungsi penanganan scroll menggunakan useCallback untuk optimasi performa
+  const handleScroll = useCallback(() => {
+    if (!isReady) return;
+    const currentScroll = window.scrollY;
 
-    const handleScroll = () => {
-      if (!isReady) return;
-      const currentScroll = window.scrollY;
-
-      // 1. LOGIKA VISIBILITAS NAVBAR & AKURASI SHIFTING TAB ATAS
-      if (currentScroll <= 30) {
-        setIsAtTop(true);
-        setShow(true);
-        
-        // JIKA DI HALAMAN /about, MAKA TETAPKAN AKTIF PADA DETAIL, BUKAN BERANDA
-        if (pathname === "/about") {
-          setActiveTab("detail");
-        } else {
-          setActiveTab("beranda");
-        }
-        return; 
-      } else {
-        setIsAtTop(false);
-        if (currentScroll > lastScroll && currentScroll > 120) {
-          setShow(false); 
-        } else {
-          setShow(true);  
-        }
+    // 1. LOGIKA VISIBILITAS NAVBAR
+    if (currentScroll <= 30) {
+      setIsAtTop(true);
+      setShow(true);
+    } else {
+      setIsAtTop(false);
+      if (currentScroll > 150) {
+        const delta = currentScroll - lastScrollY.current;
+        if (delta > 10) setShow(false); // Gulir ke bawah: Sembunyikan
+        if (delta < -10) setShow(true); // Gulir ke atas: Tampilkan
       }
-      lastScroll = currentScroll;
+    }
+    lastScrollY.current = currentScroll;
 
-      // 2. SINKRONISASI LOGIKA AUTO-ACTIVE BERDASARKAN SCROLL ELEMEN
-      const sections = ["beranda", "about", "sections", "kegiatan", "whyjoin"];
-      const scrollPosition = currentScroll + (window.innerHeight / 3);
+    // 2. SINKRONISASI AKTIFNYA MENU (Seksi Halaman vs Route URL)
+    if (pathname === "/about") {
+      setActiveTab("detail");
+      return;
+    }
 
-      for (const id of sections) {
-        const element = document.getElementById(id);
+    // Jika di halaman utama, pantau elemen bento id untuk perpindahan lampu aktif
+    const sections = ["beranda", "about", "sections", "kegiatan", "whyjoin"];
+    const scrollPosition = currentScroll + (window.innerHeight / 3);
+
+    for (const id of sections) {
+      const element = document.getElementById(id);
+      if (element) {
+        const top = element.offsetTop;
+        const height = element.offsetHeight;
         
-        if (element) {
-          const top = element.offsetTop;
-          const height = element.offsetHeight;
-          
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            // Jika melewati area kontras bento tentang kami atau seksi pelayanan
-            if (id === "about" || id === "sections" || pathname === "/about") {
-              setActiveTab("detail");
-            } else {
-              setActiveTab(id);
-            }
-            break; 
+        if (scrollPosition >= top && scrollPosition < top + height) {
+          // Jika melewati seksi bento 'about' atau 'sections' di halaman Home,
+          // status navigasi tetap menyala di "Beranda", tidak lompat ke "Detail"
+          if (id === "about" || id === "sections") {
+            setActiveTab("beranda");
+          } else {
+            setActiveTab(id);
           }
+          break; 
         }
       }
-    };
+    }
+  }, [isReady, pathname, setActiveTab]);
 
-    handleScroll();
-
+  useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
+    
+    // SOLUSI ERROR MERAH: Menunda eksekusi pemeriksaan awal menggunakan macrotask (setTimeout) 
+    // agar sinkronisasi state berjalan aman setelah siklus render utama React selesai.
+    const initialSync = setTimeout(() => {
+      handleScroll();
+    }, 0);
+
     return () => {
-      clearTimeout(timer);
       window.removeEventListener("scroll", handleScroll);
+      clearTimeout(initialSync);
     };
-  }, [isReady, setActiveTab, pathname]);
+  }, [handleScroll]);
 
   const menuItems = [
     { id: "beranda", label: "Beranda", href: "/", icon: House },
@@ -230,7 +237,7 @@ export default function Navbar({
         </AnimatePresence>
       </div>
 
-      {/* ─── 2. PREMIUM BOTTOM FLOATING DOCK (MOBILE) ─── */}
+      {/* ─── 2. BOTTOM FLOATING DOCK (MOBILE) ─── */}
       <AnimatePresence>
         {show && (
           <motion.div
