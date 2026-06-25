@@ -17,7 +17,7 @@ import {
   Layers,
 } from 'lucide-react';
 
-const category_OPTIONS = ['Project', 'Tiktok', 'Formal', 'Rendom', 'boys!!','girls!!'];
+const category_OPTIONS = ['Project', 'TE', 'Natal', 'Paskah', 'BC','girls!!'];
 
 export default function ItemForm({
   itemToEdit = null,
