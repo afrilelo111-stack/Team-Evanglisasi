@@ -194,7 +194,7 @@ export default function Kegiatan() {
             no: "03",
             periode: "Awal Bulan",
             judul: "Kunjungan Kasih (Hubmas)",
-            deskripsi: "Persekutuan dan main bareng dari rumah ke rumah untuk kenal dekat dengan keluarga teman seimanmu.",
+            deskripsi: "Persekutuan dari rumah ke rumah untuk kenal dekat dengan keluarga teman seimanmu.",
             icon: <Users size={16} />,
             accent: "bg-amber-600/10 text-amber-800"
         },
