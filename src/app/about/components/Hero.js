@@ -73,7 +73,7 @@ export default function HeroSection() {
 
           {/* Tombol Kanan: Anggota */}
           <Link 
-            href="#members"
+            href="/anggota"
             className="w-full sm:w-auto px-8 py-4 bg-[#6F4E37] hover:bg-[#855e43] text-white font-black text-xs tracking-widest rounded-xl transition-all shadow-lg shadow-[#6F4E37]/10 flex items-center justify-center gap-2 group"
           >
             ANGGOTA

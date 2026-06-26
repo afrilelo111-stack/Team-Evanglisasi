@@ -6,7 +6,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import ItemForm from '../components/ItemForm';
-import ItemCard from '../components/ItemCard';
+import ItemCard, { ItemCategoryFilter } from '../components/ItemCard'; // Impor filter dari ItemCard
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FileImage,
@@ -22,12 +22,14 @@ export default function DashboardClient() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingItem, setEditingItem] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('Semua'); // State untuk kontrol filter
   const supabase = createClient();
 
+  // Fetch data disesuaikan dengan nama tabel database anda yaitu 'gallery'
   const fetchItems = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from('items')
+      .from('gallery') // SINKRON DB: Nama tabel diganti dari 'items' menjadi 'gallery'
       .select('*')
       .order('created_at', { ascending: false });
     if (!error) setItems(data || []);
@@ -39,7 +41,7 @@ export default function DashboardClient() {
   }, []);
 
   const handleDelete = async (itemId) => {
-    const { error } = await supabase.from('items').delete().eq('id', itemId);
+    const { error } = await supabase.from('gallery').delete().eq('id', itemId); // SINKRON DB: Target tabel 'gallery'
     if (!error) fetchItems();
   };
 
@@ -52,144 +54,149 @@ export default function DashboardClient() {
     setEditingItem(null);
   };
 
-  // Menghitung statistik media secara dinamis berdasarkan tipe file asli
-  const totalGambar = items.filter(item => item.type === 'gambar' || item.image_url?.endsWith('.jpg') || item.image_url?.endsWith('.png') || item.image_url?.includes('/images/')).length;
-  const totalVideo = items.filter(item => item.type === 'video' || item.image_url?.endsWith('.mp4') || item.image_url?.includes('/videos/')).length;
+  // Menghitung statistik media berdasarkan ekstensi berkas di kolom `image_url` database
+  const totalGambar = items.filter(item => !item.image_url?.endsWith('.mp4') && !item.image_url?.includes('/videos/')).length;
+  const totalVideo = items.filter(item => item.image_url?.endsWith('.mp4') || item.image_url?.includes('/videos/')).length;
 
-  // Kontainer Induk untuk Efek Staggered (Anak elemen muncul berurutan)
+  // Memfilter item yang tampil di client-side berdasarkan kategori pilihan user
+  const filteredItems = selectedCategory === 'Semua' 
+    ? items 
+    : items.filter(item => item.category?.toLowerCase() === selectedCategory.toLowerCase());
+
+  // Kontainer Induk untuk Efek Staggered Animations
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.1 }
+      transition: { staggerChildren: 0.08 }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } }
+    hidden: { opacity: 0, y: 16 },
+    show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 120, damping: 18 } }
   };
 
-  // ─── STYLISH LIGHT SKELETON LOADING STATE ───
+  // ─── STYLISH STONE SKELETON LOADING STATE ───
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50/50 p-4 sm:p-6 lg:p-8 space-y-8 animate-pulse">
+      <div className="min-h-screen bg-[#FAF6F0] p-4 sm:p-6 lg:p-8 space-y-8 animate-pulse">
         <div className="max-w-7xl mx-auto space-y-8">
-          <div className="h-12 bg-slate-200 rounded-2xl w-1/4 border border-slate-200/60" />
+          <div className="h-12 bg-stone-200 rounded-2xl w-1/4 border border-stone-200/40" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className="h-28 bg-slate-200 rounded-3xl border border-slate-200/60" />
-            <div className="h-28 bg-slate-200 rounded-3xl border border-slate-200/60" />
-            <div className="h-28 bg-slate-200 rounded-3xl border border-slate-200/60" />
+            <div className="h-28 bg-stone-200 rounded-2xl border border-stone-200/40" />
+            <div className="h-28 bg-stone-200 rounded-2xl border border-stone-200/40" />
+            <div className="h-28 bg-stone-200 rounded-2xl border border-stone-200/40" />
           </div>
-          <div className="h-96 bg-slate-200 rounded-[2.5rem] border border-slate-200/60" />
+          <div className="h-96 bg-stone-200 rounded-3xl border border-stone-200/40" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 text-slate-800 pb-24 selection:bg-indigo-100 relative overflow-hidden">
+    <div className="min-h-screen bg-[#FAF6F0] text-stone-800 pb-24 select-none relative overflow-hidden">
       
-      {/* 🔮 PENDARAN CAHAYA DEKORATIF (Menyesuaikan Gaya Kristal Login PPLG 2) */}
-      <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-indigo-400/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-blue-400/5 rounded-full blur-[140px] pointer-events-none" />
+      {/* PENDARAN CAHAYA DEKORATIF (Menyesuaikan Tema Warna Bumi Team Evangelisasi) */}
+      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#6F4E37]/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-[#D4AF37]/5 rounded-full blur-[120px] pointer-events-none" />
 
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-12 relative z-10"
+        className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-10 relative z-10"
       >
         
         {/* ─── 1. DYNAMIC WELCOME HEADER ─── */}
         <motion.div 
           variants={itemVariants}
-          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 border-b border-slate-200/80 pb-8"
+          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-stone-200/80 pb-6"
         >
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-indigo-600 text-white rounded-2xl shadow-xl shadow-indigo-100 ring-4 ring-indigo-50/60">
-              <Layers size={24} />
+          <div className="flex items-center gap-3.5">
+            <div className="p-3 bg-[#6F4E37] text-white rounded-xl shadow-md ring-4 ring-[#6F4E37]/10">
+              <Layers size={22} />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
+              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-stone-900">
                 Studio Manajemen Inventaris
               </h1>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1 font-semibold">
-                Pusat kontrol arsip visual, dokumentasi kegiatan, dan sorotan sinematik PPLG 2
+              <p className="text-[11px] sm:text-xs text-stone-400 mt-0.5 font-bold">
+                Pusat kontrol arsip visual, dokumentasi kegiatan, dan sorotan sinematik Evangelisasi Team
               </p>
             </div>
           </div>
         </motion.div>
 
-        {/* ─── 2. ANALYTICS STATS CARDS (Framer Pop In) ─── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* ─── 2. ANALYTICS STATS CARDS ─── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Card Total Gambar */}
           <motion.div 
             variants={itemVariants}
-            whileHover={{ y: -4 }}
-            className="bg-white/80 backdrop-blur-xl border border-slate-200/80 p-6 rounded-[2rem] shadow-[0_12px_24px_-10px_rgba(0,0,0,0.02)] flex items-center justify-between group hover:border-indigo-500/30 hover:bg-white transition-all duration-300"
+            whileHover={{ y: -2 }}
+            className="bg-white border border-stone-200/80 p-5 rounded-2xl flex items-center justify-between group hover:border-[#6F4E37]/40 transition-all duration-300 shadow-xs"
           >
-            <div className="space-y-1.5">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-600 block">Arsip Foto</span>
-              <h3 className="text-3xl font-black text-slate-900 tracking-tight">
-                {totalGambar} <span className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Katalog</span>
+            <div className="space-y-1">
+              <span className="text-[9px] font-black uppercase tracking-widest text-stone-400 block">Arsip Foto</span>
+              <h3 className="text-2xl font-black text-stone-900 tracking-tight">
+                {totalGambar} <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider ml-0.5">Katalog</span>
               </h3>
             </div>
-            <div className="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center border border-indigo-100 group-hover:scale-105 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300 shadow-xs">
-              <FileImage size={24} />
+            <div className="w-12 h-12 bg-stone-50 text-stone-600 rounded-xl flex items-center justify-center border border-stone-200/60 group-hover:bg-[#6F4E37] group-hover:text-white transition-all duration-300">
+              <FileImage size={20} />
             </div>
           </motion.div>
 
           {/* Card Total Video */}
           <motion.div 
             variants={itemVariants}
-            whileHover={{ y: -4 }}
-            className="bg-white/80 backdrop-blur-xl border border-slate-200/80 p-6 rounded-[2rem] shadow-[0_12px_24px_-10px_rgba(0,0,0,0.02)] flex items-center justify-between group hover:border-rose-500/30 hover:bg-white transition-all duration-300"
+            whileHover={{ y: -2 }}
+            className="bg-white border border-stone-200/80 p-5 rounded-2xl flex items-center justify-between group hover:border-[#6F4E37]/40 transition-all duration-300 shadow-xs"
           >
-            <div className="space-y-1.5">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-rose-600 block">Sorotan Video</span>
-              <h3 className="text-3xl font-black text-slate-900 tracking-tight">
-                {totalVideo} <span className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Katalog</span>
+            <div className="space-y-1">
+              <span className="text-[9px] font-black uppercase tracking-widest text-stone-400 block">Sorotan Video</span>
+              <h3 className="text-2xl font-black text-stone-900 tracking-tight">
+                {totalVideo} <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider ml-0.5">Katalog</span>
               </h3>
             </div>
-            <div className="w-14 h-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center border border-rose-100 group-hover:scale-105 group-hover:bg-rose-600 group-hover:text-white transition-all duration-300 shadow-xs">
-              <Film size={24} />
+            <div className="w-12 h-12 bg-stone-50 text-stone-600 rounded-xl flex items-center justify-center border border-stone-200/60 group-hover:bg-rose-600 group-hover:text-white transition-all duration-300">
+              <Film size={20} />
             </div>
           </motion.div>
 
           {/* Card Status Form Tindakan */}
           <motion.div 
             variants={itemVariants}
-            whileHover={{ y: -4 }}
-            className="bg-white/80 backdrop-blur-xl border border-slate-200/80 p-6 rounded-[2rem] shadow-[0_12px_24px_-10px_rgba(0,0,0,0.02)] flex items-center justify-between group hover:bg-white transition-all duration-300 sm:col-span-2 lg:col-span-1"
+            whileHover={{ y: -2 }}
+            className="bg-white border border-stone-200/80 p-5 rounded-2xl flex items-center justify-between group transition-all duration-300 sm:col-span-2 lg:col-span-1 shadow-xs"
           >
-            <div className="space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block">Status Operasional</span>
-              <div className="flex items-center gap-2.5">
-                <span className={`w-2.5 h-2.5 rounded-full shadow-[0_0_10px] ${editingItem ? 'bg-amber-500 shadow-amber-500 animate-pulse' : 'bg-emerald-500 shadow-emerald-500'}`} />
-                <h4 className="text-xs font-black text-slate-700 max-w-[160px] truncate tracking-wide">
+            <div className="space-y-1.5">
+              <span className="text-[9px] font-black uppercase tracking-widest text-stone-400 block">Status Operasional</span>
+              <div className="flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full ${editingItem ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'}`} />
+                <h4 className="text-[11px] font-black text-stone-700 max-w-[150px] truncate tracking-wide uppercase">
                   {editingItem ? `Penyuntingan Aktif` : 'Siap Menerima Media'}
                 </h4>
               </div>
             </div>
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border transition-all duration-300 group-hover:scale-105 shadow-xs ${
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center border transition-all duration-300 ${
               editingItem 
-                ? 'bg-amber-50 text-amber-600 border-amber-100 group-hover:bg-amber-500 group-hover:text-white' 
-                : 'bg-emerald-50 text-emerald-600 border-emerald-100 group-hover:bg-emerald-500 group-hover:text-white'
+                ? 'bg-amber-50 text-amber-600 border-amber-200 group-hover:bg-amber-500 group-hover:text-white' 
+                : 'bg-emerald-50 text-emerald-600 border-emerald-200 group-hover:bg-emerald-500 group-hover:text-white'
             }`}>
-              {editingItem ? <Edit3 size={22} /> : <PlusCircle size={22} />}
+              {editingItem ? <Edit3 size={18} /> : <PlusCircle size={18} />}
             </div>
           </motion.div>
         </div>
 
         {/* ─── 3. FORM SECTION CONTAINER ─── */}
-        <motion.section variants={itemVariants} id="form-section" className="scroll-mt-28">
-          <div className={`p-[1px] rounded-[2.3rem] bg-gradient-to-tr transition-all duration-700 ${
+        <motion.section variants={itemVariants} id="form-section" className="scroll-mt-24">
+          <div className={`p-[1px] rounded-[1.8rem] bg-gradient-to-tr transition-all duration-500 ${
             editingItem 
-              ? 'from-amber-400 via-orange-400 to-indigo-500 shadow-[0_20px_40px_-15px_rgba(245,158,11,0.15)]' 
-              : 'from-slate-200/60 to-transparent'
+              ? 'from-amber-400 via-orange-400 to-[#6F4E37]' 
+              : 'from-stone-200 to-transparent'
           }`}>
-            <div className="bg-white/90 backdrop-blur-2xl rounded-[2.2rem] p-3 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.03)]">
+            <div className="bg-white rounded-[1.75rem] p-2">
               <ItemForm
                 itemToEdit={editingItem}
                 onCancelEdit={handleCancelEdit}
@@ -199,43 +206,49 @@ export default function DashboardClient() {
           </div>
         </motion.section>
 
-        {/* ─── 4. GRID DAFTAR ITEM SECTION ─── */}
-        <motion.section variants={itemVariants} className="space-y-8">
-          <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-            <div className="flex items-center gap-2.5">
-              <Box size={20} className="text-indigo-600" />
-              <h2 className="text-sm font-black text-slate-800 uppercase tracking-widest">Katalog Berkas Multimedia</h2>
+        {/* ─── 4. GRID DAFTAR ITEM SECTION + FILTER ─── */}
+        <motion.section variants={itemVariants} className="space-y-6">
+          
+          {/* BARIS UTAMA FILTER KATALOG */}
+          <ItemCategoryFilter 
+            selectedCategory={selectedCategory} 
+            onCategoryChange={setSelectedCategory} 
+          />
+
+          <div className="flex items-center justify-between border-b border-stone-200 pb-3">
+            <div className="flex items-center gap-2">
+              <Box size={16} className="text-[#6F4E37]" />
+              <h2 className="text-[11px] font-black text-stone-800 uppercase tracking-widest">Katalog Berkas Multimedia</h2>
             </div>
-            <span className="text-[10px] font-mono font-bold bg-slate-100 px-3 py-1 rounded-lg border border-slate-200 text-slate-500">
-              {items.length} Item Terdaftar
+            <span className="text-[9px] font-mono font-bold bg-stone-100 px-2.5 py-0.5 rounded border border-stone-200 text-stone-500">
+              {filteredItems.length} Terfilter
             </span>
           </div>
 
-          {items.length === 0 ? (
-            <div className="text-center py-20 bg-slate-50/50 border border-dashed border-slate-200 rounded-[2.5rem] p-8 max-w-md mx-auto shadow-inner">
-              <div className="w-14 h-14 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-slate-200/60">
-                <AlertCircle size={24} />
+          {filteredItems.length === 0 ? (
+            <div className="text-center py-16 bg-white border border-stone-200/60 rounded-2xl p-6 max-w-sm mx-auto shadow-xs">
+              <div className="w-12 h-12 bg-stone-50 text-stone-400 rounded-xl flex items-center justify-center mx-auto mb-3 border border-stone-200/60">
+                <AlertCircle size={20} />
               </div>
-              <p className="text-sm text-slate-700 font-bold tracking-wide">Katalog Kosong</p>
-              <p className="text-xs text-slate-400 mt-1 max-w-[280px] mx-auto leading-relaxed">
-                Belum ada data multimedia tersimpan. Gunakan panel unggah di atas untuk menambahkan dokumentasi pertama Anda.
+              <p className="text-xs text-stone-700 font-black uppercase tracking-wide">Katalog Kosong</p>
+              <p className="text-[11px] text-stone-400 mt-1 max-w-[240px] mx-auto leading-relaxed font-medium">
+                Tidak ada data dokumentasi dalam kategori &quot;{selectedCategory}&quot;. Coba ganti opsi saringan atau unggah media baru.
               </p>
             </div>
           ) : (
-            // Menggunakan LayoutId & AnimatePresence agar saat kartu dihapus/diedit transisinya halus
             <motion.div 
               layout
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
               <AnimatePresence mode="popLayout">
-                {items.map((item) => (
+                {filteredItems.map((item) => (
                   <motion.div 
                     layout
                     key={item.id}
-                    initial={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                    transition={{ type: "spring", stiffness: 100, damping: 15 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 12 }}
+                    transition={{ type: "spring", stiffness: 120, damping: 16 }}
                     className="h-full"
                   >
                     <ItemCard
