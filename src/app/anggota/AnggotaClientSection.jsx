@@ -1,7 +1,6 @@
-// src/app/anggota/AnggotaClientSection.jsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, memo } from 'react';
 import Image from 'next/image';
 import { User, Sparkles } from 'lucide-react';
 
@@ -24,7 +23,7 @@ const INTI_ROLES_STRUCTURE = [
 ];
 
 const getSeksiTheme = (category) => {
-  const lower = category.toLowerCase();
+  const lower = category?.toLowerCase() || '';
   if (
     lower.includes('ketua') || 
     lower.includes('sekretaris') || 
@@ -36,99 +35,106 @@ const getSeksiTheme = (category) => {
   return { borderAccent: 'border-b-[#5C3A21]', badge: 'bg-[#FAF6F0] text-[#5C3A21] border-[#E8DFD5]' };
 };
 
-export default function AnggotaClientSection({ initialMembers }) {
-  const [activeTab, setActiveTab] = useState('Semua');
+// ─── SUB-KOMPONEN KARTU POLAROID SECURE & MEMOIZED ───
+const PolaroidCard = memo(({ member, idx, theme }) => {
+  const [imgError, setImgError] = useState(false);
 
-  // ─── FILTER DATA ───
-  const intiMembersGrouped = INTI_ROLES_STRUCTURE.reduce((acc, roleObj) => {
-    acc[roleObj.key] = initialMembers.filter(
-      (member) => member.category?.toLowerCase().trim() === roleObj.key
-    );
-    return acc;
-  }, {});
+  const dynamicStyles = useMemo(() => [
+    { rotate: 'rotate-1 md:rotate-1', tape: '-rotate-3 left-1/3', offset: 'pt-5 pb-3' },
+    { rotate: '-rotate-1 md:-rotate-2', tape: 'rotate-6 left-1/2', offset: 'pt-3 pb-5' },
+    { rotate: 'rotate-2 md:-rotate-1', tape: '-rotate-6 left-1/4', offset: 'pt-4 pb-4' },
+    { rotate: '-rotate-2 md:rotate-2', tape: 'rotate-2 left-2/5', offset: 'pt-5 pb-3' }
+  ], []);
+  
+  const style = dynamicStyles[idx % dynamicStyles.length] || dynamicStyles[0];
+  const imageUrl = member?.avatar_url || member?.image_url;
 
-  const totalIntiCount = Object.values(intiMembersGrouped).reduce((sum, list) => sum + list.length, 0);
+  return (
+    <div
+      className={`relative bg-white border border-[#E8DFD5]/60 rounded-xl px-3 sm:px-4 flex flex-col items-center justify-center text-center shadow-[0_6px_18px_rgba(92,58,33,0.03)] hover:shadow-[0_12px_24px_rgba(92,58,33,0.07)] hover:-translate-y-1 transition-all duration-500 transform border-b-4 ${theme?.borderAccent || 'border-b-[#5C3A21]'} ${style.rotate} ${style.offset} w-[145px] sm:w-48 flex-shrink-0 group mx-auto`}
+    >
+      {/* Washi Tape Art */}
+      <div className={`absolute -top-2.5 ${style.tape} transform -translate-x-1/2 w-9 sm:w-11 h-4 bg-white/50 backdrop-blur-[1.5px] border border-white/80 shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-transform group-hover:scale-105 group-hover:bg-white/70`} />
 
-  const seksiMembersGrouped = SEKSI_CATEGORIES.reduce((acc, category) => {
-    acc[category] = initialMembers.filter(
-      (member) => member.category?.toLowerCase().trim() === category.toLowerCase().trim()
-    );
-    return acc;
-  }, {});
-
-  const availableTabs = [];
-  if (totalIntiCount > 0) availableTabs.push({ id: 'Inti TE', display: 'Inti TE', count: totalIntiCount });
-  SEKSI_CATEGORIES.forEach((cat) => {
-    if (seksiMembersGrouped[cat]?.length > 0) {
-      availableTabs.push({ id: cat, display: cat, count: seksiMembersGrouped[cat].length });
-    }
-  });
-
-  // Render Kartu Polaroid
-  const renderPolaroidCard = (member, idx, theme) => {
-    const dynamicStyles = [
-      { rotate: 'rotate-1 md:rotate-1', tape: '-rotate-3 left-1/3', offset: 'pt-5 pb-3' },
-      { rotate: '-rotate-1 md:-rotate-2', tape: 'rotate-6 left-1/2', offset: 'pt-3 pb-5' },
-      { rotate: 'rotate-2 md:-rotate-1', tape: '-rotate-6 left-1/4', offset: 'pt-4 pb-4' },
-      { rotate: '-rotate-2 md:rotate-2', tape: 'rotate-2 left-2/5', offset: 'pt-5 pb-3' }
-    ];
-    
-    const style = dynamicStyles[idx % dynamicStyles.length];
-
-    return (
-      <div
-        key={member.id}
-        className={`relative bg-white border border-[#E8DFD5]/60 rounded-xl px-3 sm:px-4 flex flex-col items-center justify-center text-center shadow-[0_6px_18px_rgba(92,58,33,0.03)] hover:shadow-[0_12px_24px_rgba(92,58,33,0.07)] hover:-translate-y-1 transition-all duration-500 transform border-b-4 ${theme.borderAccent} ${style.rotate} ${style.offset} w-[145px] sm:w-48 flex-shrink-0 group mx-auto`}
-      >
-        {/* Washi Tape Art */}
-        <div className={`absolute -top-2.5 ${style.tape} transform -translate-x-1/2 w-9 sm:w-11 h-4 bg-white/50 backdrop-blur-[1.5px] border border-white/80 shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-transform group-hover:scale-105 group-hover:bg-white/70`} />
-
-        {/* Frame Polaroid */}
-        <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden bg-[#FAF9F5] border border-slate-100 mb-3 flex-shrink-0 shadow-inner">
-          {member.avatar_url || member.image_url ? (
-            <Image
-              src={member.avatar_url || member.image_url}
-              alt={member.name || "Foto Anggota"}
-              fill
-              unoptimized
-              className="object-cover transition-transform duration-700 grayscale-[10%] group-hover:grayscale-0 group-hover:scale-105"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-[#A38A75]/40 bg-[#FAF6F0]"><User size={28} /></div>
-          )}
-        </div>
-
-        {/* Info Detail */}
-        <div className="w-full min-w-0">
-          <span className={`text-[8px] font-bold tracking-widest px-2 py-0.5 rounded ${theme.badge} border uppercase inline-block mb-1`}>
-            {member.role || member.category}
-          </span>
-          <h4 className="text-[12.5px] sm:text-sm font-semibold text-[#3D2616] tracking-tight truncate px-0.5 transition-colors group-hover:text-[#5C3A21]">
-            {member.description || 'Nama Pelayan'}
-          </h4>
-        </div>
+      {/* Frame Polaroid dengan Proteksi Gambar Rusak */}
+      <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden bg-[#FAF9F5] border border-slate-100 mb-3 flex-shrink-0 shadow-inner">
+        {imageUrl && !imgError ? (
+          <Image
+            src={imageUrl}
+            alt={member?.name || "Foto Anggota"}
+            fill
+            sizes="(max-width: 640px) 96px, 112px"
+            className="object-cover transition-transform duration-700 grayscale-[10%] group-hover:grayscale-0 group-hover:scale-105"
+            // KEAMANAN: Jika token URL gambar kedaluwarsa atau link pecah, switch ke fallback icon secara otomatis
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-[#A38A75]/40 bg-[#FAF6F0]" aria-label="Foto tidak tersedia">
+            <User size={28} />
+          </div>
+        )}
       </div>
-    );
-  };
+
+      {/* Info Detail dengan Validasi Nullish Fallback */}
+      <div className="w-full min-w-0">
+        <span className={`text-[8px] font-bold tracking-widest px-2 py-0.5 rounded ${theme?.badge || 'bg-[#FAF6F0] text-[#5C3A21]'} border uppercase inline-block mb-1 truncate max-w-full`}>
+          {member?.role || member?.category || 'Pelayan'}
+        </span>
+        <h4 className="text-[12.5px] sm:text-sm font-semibold text-[#3D2616] tracking-tight truncate px-0.5 transition-colors group-hover:text-[#5C3A21]">
+          {member?.description || member?.name || 'Nama Pelayan'}
+        </h4>
+      </div>
+    </div>
+  );
+});
+
+PolaroidCard.displayName = 'PolaroidCard';
+
+export default function AnggotaClientSection({ initialMembers = [] }) {
+  const [activeTab] = useState('Semua');
+
+  // ─── AMAN & MEMOIZED: PROSES FILTER DATA DENGAN STRIP DATA NULL/UNDEFINED ───
+  const { intiMembersGrouped, totalIntiCount, seksiMembersGrouped } = useMemo(() => {
+    // Memastikan input adalah sebuah array untuk mencegah error .filter() jika prop kosong
+    const safeMembers = Array.isArray(initialMembers) ? initialMembers : [];
+
+    const intiGrouped = INTI_ROLES_STRUCTURE.reduce((acc, roleObj) => {
+      acc[roleObj.key] = safeMembers.filter(
+        (member) => member?.category?.toLowerCase().trim() === roleObj.key
+      );
+      return acc;
+    }, {});
+
+    const intiCount = Object.values(intiGrouped).reduce((sum, list) => sum + list.length, 0);
+
+    const seksiGrouped = SEKSI_CATEGORIES.reduce((acc, category) => {
+      acc[category] = safeMembers.filter(
+        (member) => member?.category?.toLowerCase().trim() === category.toLowerCase().trim()
+      );
+      return acc;
+    }, {});
+
+    return {
+      intiMembersGrouped: intiGrouped,
+      totalIntiCount: intiCount,
+      seksiMembersGrouped: seksiGrouped
+    };
+  }, [initialMembers]);
 
   return (
     <div className="space-y-12 sm:space-y-16 max-w-7xl mx-auto px-2 sm:px-6">
-      
-      {/* ─── DISPLAY WRAPPER MADING ─── */}
       <div className="space-y-16 sm:space-y-24 text-center">
 
-        {/* ─── 1. BLOK INTI TE (Centered Grid di Semua Layar) ─── */}
+        {/* ─── 1. BLOK INTI TE ─── */}
         {(activeTab === 'Semua' || activeTab === 'Inti TE') && totalIntiCount > 0 && (
           <div className="w-full py-2 animate-fade-in">
             <div className="relative pt-6 sm:pt-10 w-full max-w-5xl mx-auto">
               
-              {/* Batang Judul */}
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#D4AF37] text-white text-[10px] sm:text-[11px] font-bold px-6 sm:px-8 py-1.5 sm:py-2 rounded-full shadow-[0_4px_12px_rgba(212,175,55,0.2)] uppercase tracking-widest whitespace-nowrap flex items-center gap-1.5">
                 <Sparkles size={10} className="fill-white" />
                 Inti TE
               </div>
 
-              {/* Grid Jabatan */}
               <div className="space-y-10 sm:space-y-14 w-full">
                 {INTI_ROLES_STRUCTURE.map((roleObj) => {
                   const roleMembers = intiMembersGrouped[roleObj.key] || [];
@@ -137,7 +143,6 @@ export default function AnggotaClientSection({ initialMembers }) {
 
                   return (
                     <div key={roleObj.key} className="space-y-4">
-                      {/* Pembatas */}
                       <div className="flex items-center justify-center gap-3 px-6">
                         <span className="h-[1px] flex-1 max-w-[40px] bg-[#E8DFD5]"></span>
                         <div className="text-[#A38A75] font-mono text-[9px] sm:text-[10px] font-bold tracking-widest uppercase">
@@ -146,9 +151,15 @@ export default function AnggotaClientSection({ initialMembers }) {
                         <span className="h-[1px] flex-1 max-w-[40px] bg-[#E8DFD5]"></span>
                       </div>
                       
-                      {/* Perubahan di Sini: flex-wrap & justify-center agar posisi selalu di tengah baik mobile maupun desktop */}
                       <div className="flex flex-wrap justify-center gap-4 sm:gap-8 px-4 w-full mx-auto">
-                        {roleMembers.map((member, idx) => renderPolaroidCard(member, idx, theme))}
+                        {roleMembers.map((member, idx) => (
+                          <PolaroidCard 
+                            key={member?.id || `inti-${roleObj.key}-${idx}`} 
+                            member={member} 
+                            idx={idx} 
+                            theme={theme} 
+                          />
+                        ))}
                       </div>
                     </div>
                   );
@@ -176,7 +187,14 @@ export default function AnggotaClientSection({ initialMembers }) {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-1 sm:gap-6 justify-center items-center">
-                  {displayMembers.map((member, idx) => renderPolaroidCard(member, idx, theme))}
+                  {displayMembers.map((member, idx) => (
+                    <PolaroidCard 
+                      key={member?.id || `seksi-${category}-${idx}`} 
+                      member={member} 
+                      idx={idx} 
+                      theme={theme} 
+                    />
+                  ))}
                 </div>
 
               </div>
