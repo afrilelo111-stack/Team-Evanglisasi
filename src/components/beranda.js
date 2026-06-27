@@ -15,6 +15,7 @@ const SAFE_FALLBACK_IMAGES = [
   { image_url: "/kegiatan/jumat.png" }
 ];
 
+// Fungsi Utility untuk mengacak urutan array secara acak (Fisher-Yates Shuffle)
 function shuffleArray(array) {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -46,6 +47,8 @@ export default function AboutEvangelisasi() {
 
         if (isMounted) {
           const validData = (data || []).filter(item => item && typeof item.image_url === 'string');
+          
+          // Mengacak data gambar yang masuk agar urutannya tidak selalu sama saat di-refresh
           const finalData = validData.length > 0 ? validData : SAFE_FALLBACK_IMAGES;
           setAllImages(shuffleArray(finalData));
         }
@@ -64,16 +67,18 @@ export default function AboutEvangelisasi() {
     };
   }, []);
 
+  // Interval Rotasi Gambar
   useEffect(() => {
     if (allImages.length <= 1) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % allImages.length);
-    }, 5000);
+    }, 5000); 
 
     return () => clearInterval(interval);
   }, [allImages.length]);
 
+  // Mengambil gambar berdasarkan index yang bergeser dari array yang sudah diacak
   const { img1, img2, img3 } = useMemo(() => {
     const len = allImages.length;
     if (len === 0) return { img1: null, img2: null, img3: null };
@@ -89,22 +94,7 @@ export default function AboutEvangelisasi() {
     setBrokenImages((prev) => ({ ...prev, [src]: true }));
   };
 
-  // ─── HANDLER DOWNLOAD (KLIK KANAN) ───
-  const handleContextMenu = (e, imageUrl) => {
-    e.preventDefault();
-    const fallback = "/kegiatan/jumat.png";
-    const url = imageUrl && !brokenImages[imageUrl] ? imageUrl : fallback;
-    
-    const link = document.createElement("a");
-    link.href = url;
-    const fileName = url.split("/").pop() || `gambar-te-${Date.now()}.jpg`;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  // ─── VARIANTS ───
+  // ─── STYLING & ANIMATION VARIANTS ───
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -173,20 +163,16 @@ export default function AboutEvangelisasi() {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="absolute top-[15%] left-0 w-[72%] h-[50%] rounded-2xl overflow-hidden shadow-xl border-2 border-white z-20 cursor-pointer select-none"
-                    onContextMenu={(e) => handleContextMenu(e, img1.image_url)}
-                    draggable={false}
+                    className="absolute top-[15%] left-0 w-[72%] h-[50%] rounded-2xl overflow-hidden shadow-xl border-2 border-white z-20"
                   >
                     <Image
                       src={brokenImages[img1.image_url] ? "/kegiatan/jumat.png" : img1.image_url} 
                       alt="Gallery Asset 1"
                       fill
                       unoptimized
-                      className="object-cover object-center pointer-events-none"
+                      className="object-cover object-center"
                       sizes="(max-w-1024px) 50vw, 30vw"
                       onError={() => handleImageError(img1.image_url)}
-                      referrerPolicy="no-referrer"
-                      crossOrigin="anonymous"
                     />
                   </motion.div>
                 )}
@@ -201,20 +187,16 @@ export default function AboutEvangelisasi() {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="absolute top-0 right-0 w-[46%] h-[34%] rounded-2xl overflow-hidden shadow-lg border-2 border-white z-30 cursor-pointer select-none"
-                    onContextMenu={(e) => handleContextMenu(e, img2.image_url)}
-                    draggable={false}
+                    className="absolute top-0 right-0 w-[46%] h-[34%] rounded-2xl overflow-hidden shadow-lg border-2 border-white z-30"
                   >
                     <Image
                       src={brokenImages[img2.image_url] ? "/kegiatan/doa.jpeg" : img2.image_url} 
                       alt="Gallery Asset 2"
                       fill
                       unoptimized
-                      className="object-cover object-center pointer-events-none"
+                      className="object-cover object-center"
                       sizes="(max-w-1024px) 30vw, 20vw"
                       onError={() => handleImageError(img2.image_url)}
-                      referrerPolicy="no-referrer"
-                      crossOrigin="anonymous"
                     />
                   </motion.div>
                 )}
@@ -229,20 +211,16 @@ export default function AboutEvangelisasi() {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="absolute bottom-4 right-[4%] w-[58%] h-[40%] rounded-2xl overflow-hidden shadow-xl border-2 border-white z-10 cursor-pointer select-none"
-                    onContextMenu={(e) => handleContextMenu(e, img3.image_url)}
-                    draggable={false}
+                    className="absolute bottom-4 right-[4%] w-[58%] h-[40%] rounded-2xl overflow-hidden shadow-xl border-2 border-white z-10"
                   >
                     <Image
                       src={brokenImages[img3.image_url] ? "/kegiatan/paskah.jpeg" : img3.image_url} 
                       alt="Gallery Asset 3"
                       fill
                       unoptimized
-                      className="object-cover object-center pointer-events-none"
+                      className="object-cover object-center"
                       sizes="(max-w-1024px) 35vw, 22vw"
                       onError={() => handleImageError(img3.image_url)}
-                      referrerPolicy="no-referrer"
-                      crossOrigin="anonymous"
                     />
                   </motion.div>
                 )}
@@ -280,7 +258,7 @@ export default function AboutEvangelisasi() {
               <strong className="text-[#3D2A1C]">Team Evangelisasi (TE)</strong> adalah komunitas dan wadah persekutuan resmi bagi siswa-siswi Kristen di SMKN 3 Manado. Di sini, kami bukan cuma sekadar berorganisasi, tapi membangun sebuah <span className="text-[#8B6347] font-bold bg-[#8B6347]/5 px-1.5 py-0.5 rounded">circle pertemanan yang sehat, suportif, dan penuh rasa kekeluargaan</span>.
             </p>
             <p>
-              Lewat berbagai kegiatan seru—mulai dari ibadah, pengembangan bakat (Musik, Banners, Rebana), tim multimedia, hingga aksi sosial nyata—TE hadir sebagai tempat terbaik buat kamu yang ingin mengasah talenta sekaligus memperdalam iman rohani selama masa sekolah.
+              Lewat berbagai kegiatan seru—mulai dari ibadah, pengembangan bakat (Musik ,Banners, Rebana), tim multimedia, hingga aksi sosial nyata—TE hadir sebagai tempat terbaik buat kamu yang ingin mengasah talenta sekaligus memperdalam iman rohani selama masa sekolah.
             </p>
 
             <div className="bg-[#6F4E37]/5 border-l-4 border-[#D4AF37] p-5 rounded-r-2xl flex items-start gap-4 mt-6">
