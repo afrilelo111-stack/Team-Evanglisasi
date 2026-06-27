@@ -80,6 +80,47 @@ export default function Kegiatan() {
         return () => clearInterval(interval);
     }, [images, loading]);
 
+    // 🔥 FUNGSI UTAMA: Memaksa browser mengunduh file biner bypass CORS & mematikan klik kanan tab baru
+    const handleForceDownload = async (e, src, defaultName) => {
+        e.preventDefault(); // Matikan aksi default browser (buka tautan / menu peninjau gambar)
+
+        if (!src) return;
+
+        // Jika gambar lokal / fallback statis di dalam folder public
+        if (src.startsWith("/")) {
+            const link = document.createElement("a");
+            link.href = src;
+            link.download = `${defaultName}.webp`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            return;
+        }
+
+        try {
+            // Ambil data gambar eksternal (Supabase) sebagai objek Blob biner
+            const response = await fetch(src, { method: "GET", mode: "cors" });
+            const blob = await response.blob();
+            
+            // Konversi objek biner ke URL lokal internal browser sementara
+            const blobUrl = window.URL.createObjectURL(blob);
+            
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = `${defaultName}.jpg`;
+            document.body.appendChild(link);
+            
+            link.click(); // Trigger simulasi klik unduh otomatis
+            
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+        } catch (err) {
+            console.error("Gagal mengunduh gambar secara paksa:", err);
+            // Fallback aman terakhir jika CORS terblokir total dari server eksternal
+            window.open(src, "_blank");
+        }
+    };
+
     const renderImageSlot = (categoryKey, fallbackAlt) => {
         if (loading) {
             return (
@@ -92,15 +133,22 @@ export default function Kegiatan() {
         const categoryImages = images[categoryKey] || [];
         
         if (categoryImages.length === 0) {
+            const fallbackSrc = `/kegiatan/${categoryKey}.webp`;
             return (
-                <Image
-                    src={`/kegiatan/${categoryKey}.webp`}
-                    alt={fallbackAlt}
-                    fill
-                    unoptimized
-                    sizes="(max-width: 768px) 85vw, 50vw"
-                    className="object-cover object-center opacity-65 transition-transform duration-700 group-hover:scale-105"
-                />
+                <div 
+                    onClick={(e) => handleForceDownload(e, fallbackSrc, categoryKey)}
+                    onContextMenu={(e) => handleForceDownload(e, fallbackSrc, categoryKey)}
+                    className="w-full h-full absolute inset-0 cursor-pointer select-none"
+                >
+                    <Image
+                        src={fallbackSrc}
+                        alt={fallbackAlt}
+                        fill
+                        unoptimized
+                        sizes="(max-width: 768px) 85vw, 50vw"
+                        className="object-cover object-center opacity-65 transition-transform duration-700 group-hover:scale-105 pointer-events-none"
+                    />
+                </div>
             );
         }
 
@@ -114,11 +162,13 @@ export default function Kegiatan() {
                         return (
                             <motion.div
                                 key={img.image_url + index}
-                                className="absolute inset-0 w-full h-full"
+                                className="absolute inset-0 w-full h-full cursor-pointer select-none"
                                 initial={{ opacity: 0, scale: 1.05 }}
                                 animate={{ opacity: 0.65, scale: 1 }}
                                 exit={{ opacity: 0 }}
                                 transition={{ duration: 1, ease: [0.25, 1, 0.5, 1] }}
+                                onClick={(e) => handleForceDownload(e, img.image_url, `${categoryKey}-${index + 1}`)}
+                                onContextMenu={(e) => handleForceDownload(e, img.image_url, `${categoryKey}-${index + 1}`)}
                             >
                                 <Image
                                     src={img.image_url}
@@ -126,7 +176,7 @@ export default function Kegiatan() {
                                     fill
                                     unoptimized
                                     sizes="(max-width: 768px) 85vw, 50vw"
-                                    className="object-cover object-center transition-transform duration-700"
+                                    className="object-cover object-center transition-transform duration-700 pointer-events-none"
                                 />
                             </motion.div>
                         );
@@ -218,7 +268,7 @@ export default function Kegiatan() {
 
             <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-10">
                 
-                {/* Header: Dibuat lebih rapat di mobile */}
+                {/* Header */}
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between border-b border-[#6F4E37]/10 pb-6 md:pb-12 mb-8 md:mb-16 gap-3">
                     <div className="max-w-2xl">
                         <div className="inline-flex items-center gap-2 mb-1.5 bg-[#6F4E37]/5 px-2.5 py-1 rounded-full">
@@ -246,7 +296,7 @@ export default function Kegiatan() {
                     viewport={{ once: true, margin: "-40px" }}
                     className="grid lg:grid-cols-12 gap-10 lg:gap-16"
                 >
-                    {/* Agenda Rutin: List card dioptimalkan touch target-nya */}
+                    {/* Agenda Rutin */}
                     <div className="lg:col-span-5 space-y-5">
                         <div>
                             <h3 className="text-base md:text-lg font-black text-[#3D2A1C] tracking-tight mb-0.5">
@@ -292,7 +342,7 @@ export default function Kegiatan() {
                         </div>
                     </div>
 
-                    {/* Perayaan Besar Tahunan: Horizontal Scroll di Mobile dipercantik */}
+                    {/* Perayaan Besar Tahunan */}
                     <div className="lg:col-span-7 space-y-4 overflow-hidden relative">
                         <div className="flex justify-between items-end">
                             <div>
@@ -306,7 +356,6 @@ export default function Kegiatan() {
                             </div>
                         </div>
 
-                        {/* Slider Mobile (Menggunakan snap-x, -mx-4 & px-4 agar swipe bisa full-screen edge-to-edge) */}
                         <div className="-mx-4 px-4 md:mx-0 md:px-0 flex md:grid md:grid-cols-2 gap-4 md:gap-5 overflow-x-auto md:overflow-x-visible scrollbar-none snap-x snap-mandatory pb-5">
                             
                             {/* Card 1: Natal */}
@@ -316,7 +365,7 @@ export default function Kegiatan() {
                             >
                                 {renderImageSlot("natal", "KKR Natal TE")}
                                 <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-transparent pointer-events-none z-10" />
-                                <div className="absolute bottom-0 inset-x-0 p-4 md:p-6 flex justify-between items-end z-20">
+                                <div className="absolute bottom-0 inset-x-0 p-4 md:p-6 flex justify-between items-end z-20 pointer-events-none">
                                     <div className="max-w-md">
                                         <span className="text-[8px] font-black tracking-widest text-[#D4AF37] uppercase border border-[#D4AF37]/40 px-1.5 py-0.5 rounded mb-1.5 inline-block">
                                             Annual Mega Event
@@ -342,7 +391,7 @@ export default function Kegiatan() {
                             >
                                 {renderImageSlot("paskah", "KKR Paskah TE")}
                                 <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/50 to-transparent pointer-events-none z-10" />
-                                <div className="absolute bottom-0 inset-x-0 p-4 md:p-6 z-20">
+                                <div className="absolute bottom-0 inset-x-0 p-4 md:p-6 z-20 pointer-events-none">
                                     <span className="text-[8px] font-black tracking-widest text-[#D4AF37] uppercase bg-white/10 px-1.5 py-0.5 rounded mb-1.5 inline-block">
                                         Sacred Celebration
                                     </span>
@@ -363,7 +412,7 @@ export default function Kegiatan() {
                             >
                                 {renderImageSlot("bc", "Bible Camp TE")}
                                 <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/50 to-transparent pointer-events-none z-10" />
-                                <div className="absolute bottom-0 inset-x-0 p-4 md:p-6 z-20">
+                                <div className="absolute bottom-0 inset-x-0 p-4 md:p-6 z-20 pointer-events-none">
                                     <span className="text-[8px] font-black tracking-widest text-stone-200 uppercase bg-[#6F4E37]/80 px-1.5 py-0.5 rounded mb-1.5 inline-block">
                                         Discipleship Camp
                                     </span>

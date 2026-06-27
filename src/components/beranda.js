@@ -15,7 +15,6 @@ const SAFE_FALLBACK_IMAGES = [
   { image_url: "/kegiatan/jumat.png" }
 ];
 
-// Fungsi Utility untuk mengacak urutan array secara acak (Fisher-Yates Shuffle)
 function shuffleArray(array) {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -47,13 +46,11 @@ export default function AboutEvangelisasi() {
 
         if (isMounted) {
           const validData = (data || []).filter(item => item && typeof item.image_url === 'string');
-          
-          // Mengacak data gambar yang masuk agar urutannya tidak selalu sama saat di-refresh
           const finalData = validData.length > 0 ? validData : SAFE_FALLBACK_IMAGES;
           setAllImages(shuffleArray(finalData));
         }
       } catch (error) {
-        console.error("Gagal mengambil data dari Supabase (Menggunakan Fallback Aman):", error.message);
+        console.error("Gagal mengambil data dari Supabase:", error.message);
         if (isMounted) setAllImages(shuffleArray(SAFE_FALLBACK_IMAGES));
       } finally {
         if (isMounted) setLoading(false);
@@ -67,7 +64,6 @@ export default function AboutEvangelisasi() {
     };
   }, []);
 
-  // Interval Rotasi Gambar
   useEffect(() => {
     if (allImages.length <= 1) return;
 
@@ -78,7 +74,6 @@ export default function AboutEvangelisasi() {
     return () => clearInterval(interval);
   }, [allImages.length]);
 
-  // Mengambil gambar berdasarkan index yang bergeser dari array yang sudah diacak
   const { img1, img2, img3 } = useMemo(() => {
     const len = allImages.length;
     if (len === 0) return { img1: null, img2: null, img3: null };
@@ -94,7 +89,48 @@ export default function AboutEvangelisasi() {
     setBrokenImages((prev) => ({ ...prev, [src]: true }));
   };
 
-  // ─── STYLING & ANIMATION VARIANTS ───
+  // 🔥 FUNGSI UTAMA: Memaksa unduh file biner & mematikan fungsi klik kanan bawaan browser
+  const handleForceDownload = async (e, src, defaultName) => {
+    // Matikan aksi default klik / buka link tab baru
+    e.preventDefault(); 
+
+    if (!src || src.startsWith("/")) {
+      // Jika gambar lokal/fallback, buat link bayangan untuk download biasa
+      const link = document.createElement("a");
+      link.href = src;
+      link.download = `${defaultName}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return;
+    }
+
+    try {
+      // Ambil file asli sebagai biner melewati pembatasan CORS browser
+      const response = await fetch(src, { method: "GET", mode: "cors" });
+      const blob = await response.blob();
+      
+      // Ubah biner menjadi URL lokal temporary
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `${defaultName}.jpg`;
+      document.body.appendChild(link);
+      
+      // Jalankan trigger download otomatis
+      link.click();
+      
+      // Hapus sisa element dari memori
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error("Gagal mengunduh gambar secara paksa:", err);
+      // Fallback jika fetch gagal: buka via window baru
+      window.open(src, "_blank");
+    }
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -163,17 +199,23 @@ export default function AboutEvangelisasi() {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="absolute top-[15%] left-0 w-[72%] h-[50%] rounded-2xl overflow-hidden shadow-xl border-2 border-white z-20"
+                    className="absolute top-[15%] left-0 w-[72%] h-[50%] rounded-2xl overflow-hidden shadow-xl border-2 border-white z-20 cursor-pointer"
                   >
-                    <Image
-                      src={brokenImages[img1.image_url] ? "/kegiatan/jumat.png" : img1.image_url} 
-                      alt="Gallery Asset 1"
-                      fill
-                      unoptimized
-                      className="object-cover object-center"
-                      sizes="(max-w-1024px) 50vw, 30vw"
-                      onError={() => handleImageError(img1.image_url)}
-                    />
+                    <div 
+                      onClick={(e) => handleForceDownload(e, brokenImages[img1.image_url] ? "/kegiatan/jumat.png" : img1.image_url, "evangelisasi-1")}
+                      onContextMenu={(e) => handleForceDownload(e, brokenImages[img1.image_url] ? "/kegiatan/jumat.png" : img1.image_url, "evangelisasi-1")}
+                      className="w-full h-full relative block"
+                    >
+                      <Image
+                        src={brokenImages[img1.image_url] ? "/kegiatan/jumat.png" : img1.image_url} 
+                        alt="Gallery Asset 1"
+                        fill
+                        unoptimized
+                        className="object-cover object-center pointer-events-none"
+                        sizes="(max-w-1024px) 50vw, 30vw"
+                        onError={() => handleImageError(img1.image_url)}
+                      />
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -187,17 +229,23 @@ export default function AboutEvangelisasi() {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="absolute top-0 right-0 w-[46%] h-[34%] rounded-2xl overflow-hidden shadow-lg border-2 border-white z-30"
+                    className="absolute top-0 right-0 w-[46%] h-[34%] rounded-2xl overflow-hidden shadow-lg border-2 border-white z-30 cursor-pointer"
                   >
-                    <Image
-                      src={brokenImages[img2.image_url] ? "/kegiatan/doa.jpeg" : img2.image_url} 
-                      alt="Gallery Asset 2"
-                      fill
-                      unoptimized
-                      className="object-cover object-center"
-                      sizes="(max-w-1024px) 30vw, 20vw"
-                      onError={() => handleImageError(img2.image_url)}
-                    />
+                    <div 
+                      onClick={(e) => handleForceDownload(e, brokenImages[img2.image_url] ? "/kegiatan/doa.jpeg" : img2.image_url, "evangelisasi-2")}
+                      onContextMenu={(e) => handleForceDownload(e, brokenImages[img2.image_url] ? "/kegiatan/doa.jpeg" : img2.image_url, "evangelisasi-2")}
+                      className="w-full h-full relative block"
+                    >
+                      <Image
+                        src={brokenImages[img2.image_url] ? "/kegiatan/doa.jpeg" : img2.image_url} 
+                        alt="Gallery Asset 2"
+                        fill
+                        unoptimized
+                        className="object-cover object-center pointer-events-none"
+                        sizes="(max-w-1024px) 30vw, 20vw"
+                        onError={() => handleImageError(img2.image_url)}
+                      />
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -211,17 +259,23 @@ export default function AboutEvangelisasi() {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="absolute bottom-4 right-[4%] w-[58%] h-[40%] rounded-2xl overflow-hidden shadow-xl border-2 border-white z-10"
+                    className="absolute bottom-4 right-[4%] w-[58%] h-[40%] rounded-2xl overflow-hidden shadow-xl border-2 border-white z-10 cursor-pointer"
                   >
-                    <Image
-                      src={brokenImages[img3.image_url] ? "/kegiatan/paskah.jpeg" : img3.image_url} 
-                      alt="Gallery Asset 3"
-                      fill
-                      unoptimized
-                      className="object-cover object-center"
-                      sizes="(max-w-1024px) 35vw, 22vw"
-                      onError={() => handleImageError(img3.image_url)}
-                    />
+                    <div 
+                      onClick={(e) => handleForceDownload(e, brokenImages[img3.image_url] ? "/kegiatan/paskah.jpeg" : img3.image_url, "evangelisasi-3")}
+                      onContextMenu={(e) => handleForceDownload(e, brokenImages[img3.image_url] ? "/kegiatan/paskah.jpeg" : img3.image_url, "evangelisasi-3")}
+                      className="w-full h-full relative block"
+                    >
+                      <Image
+                        src={brokenImages[img3.image_url] ? "/kegiatan/paskah.jpeg" : img3.image_url} 
+                        alt="Gallery Asset 3"
+                        fill
+                        unoptimized
+                        className="object-cover object-center pointer-events-none"
+                        sizes="(max-w-1024px) 35vw, 22vw"
+                        onError={() => handleImageError(img3.image_url)}
+                      />
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -240,7 +294,7 @@ export default function AboutEvangelisasi() {
           </div>        
         </motion.div>
 
-        {/* KOLOM KANAN: TEXT CONTENT */}
+        {/* KOLOM KANAN */}
         <motion.div variants={itemVariants} className="lg:col-span-7 flex flex-col justify-center">
           <div className="flex items-center gap-2.5 mb-4">
             <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
@@ -258,7 +312,7 @@ export default function AboutEvangelisasi() {
               <strong className="text-[#3D2A1C]">Team Evangelisasi (TE)</strong> adalah komunitas dan wadah persekutuan resmi bagi siswa-siswi Kristen di SMKN 3 Manado. Di sini, kami bukan cuma sekadar berorganisasi, tapi membangun sebuah <span className="text-[#8B6347] font-bold bg-[#8B6347]/5 px-1.5 py-0.5 rounded">circle pertemanan yang sehat, suportif, dan penuh rasa kekeluargaan</span>.
             </p>
             <p>
-              Lewat berbagai kegiatan seru—mulai dari ibadah, pengembangan bakat (Musik ,Banners, Rebana), tim multimedia, hingga aksi sosial nyata—TE hadir sebagai tempat terbaik buat kamu yang ingin mengasah talenta sekaligus memperdalam iman rohani selama masa sekolah.
+              Lewat berbagai kegiatan seru—mulai dari ibadah, pengembangan bakat (Musik, Banners, Rebana), tim multimedia, hingga aksi sosial nyata—TE hadir sebagai tempat terbaik buat kamu yang ingin mengasah talenta sekaligus memperdalam iman rohani selama masa sekolah.
             </p>
 
             <div className="bg-[#6F4E37]/5 border-l-4 border-[#D4AF37] p-5 rounded-r-2xl flex items-start gap-4 mt-6">
