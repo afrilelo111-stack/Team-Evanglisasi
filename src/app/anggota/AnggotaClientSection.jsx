@@ -175,7 +175,7 @@ export default function AnggotaClientSection({ initialMembers = [] }) {
               
               <div className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-[#D4AF37] text-white text-[9.5px] sm:text-[11px] font-black px-7 sm:px-8 py-1.5 sm:py-2 rounded-full shadow-[0_4px_15px_rgba(212,175,55,0.2)] uppercase tracking-[0.2em] whitespace-nowrap flex items-center gap-1.5">
                 <Sparkles size={11} className="fill-white text-white" />
-                Dewan Pengurus Inti
+                 Pengurus Inti
               </div>
 
               <div className="space-y-12 sm:space-y-20 w-full">
