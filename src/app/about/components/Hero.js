@@ -17,12 +17,12 @@ export default function HeroSection() {
         backgroundSize: '32px 32px'
       }}
     >
-      {/* Efek Pendaran Cahaya Emas Sinematik (Digeser lebih ke bawah lagi di titik 65%) */}
+      {/* Efek Pendaran Cahaya Emas Sinematik */}
       <div className="absolute top-[65%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#D4AF37]/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-4xl w-full text-center relative z-10 flex flex-col items-center">
         
-        {/* LOGO UTAMA BESAR DENGAN WARNA TERANG & GLOW */}
+        {/* LOGO UTAMA BESAR */}
         <motion.h1 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -42,7 +42,7 @@ export default function HeroSection() {
           TEAM EVANGELISASI SMKN 3 MANADO
         </motion.p>
 
-        {/* KOTAK KONTEN UTAMA (DARK SEMI-TRANSPARENT CONTAINER) */}
+        {/* KOTAK KONTEN UTAMA */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -71,9 +71,10 @@ export default function HeroSection() {
             GURU AGAMA
           </Link>
 
-          {/* Tombol Kanan: Anggota */}
+          {/* Tombol Kanan: Anggota (Prefetch diaktifkan agar instan) */}
           <Link 
             href="/anggota"
+            prefetch={true}
             className="w-full sm:w-auto px-8 py-4 bg-[#6F4E37] hover:bg-[#855e43] text-white font-black text-xs tracking-widest rounded-xl transition-all shadow-lg shadow-[#6F4E37]/10 flex items-center justify-center gap-2 group"
           >
             ANGGOTA
