@@ -7,7 +7,7 @@ import { User, Sparkles } from 'lucide-react';
 const SEKSI_CATEGORIES = [
   'Kordinator umum',
   'seksie ibadah',
-  'seksie kreatif',
+  'seksie kreativitas',
   'seksie dokum',
   'seksie perlengkapan',
   'seksie doa & sharing',
