@@ -67,10 +67,9 @@ const PolaroidCard = memo(({ member, idx, theme }) => {
   const imageUrl = member?.avatar_url || member?.image_url;
 
   return (
-    // Menggunakan w-[46%] di mobile agar pembagian 2 kolom flex tetap seimbang dan presisi di tengah
     <div className="w-[46%] sm:w-56 flex-shrink-0 group perspective-1000">
       <div
-        className={`relative bg-[#FCFAF2] border border-[#EDE7DC] px-3 pt-5 pb-4 flex flex-col items-center justify-center text-center rounded-sm transition-all duration-700 ease-out transform-gpu border-b-[4px] sm:border-b-[5px] ${theme?.borderAccent || 'border-b-[#5C3A21]'} ${craftStyle.rotateClass} shadow-[3px_8px_18px_rgba(92,58,33,0.06)] group-hover:shadow-[10px_25px_50px_rgba(92,58,33,0.12)] group-hover:-translate-y-3 group-hover:rotate-y-6 group-hover:rotate-0`}
+        className={`relative bg-[#FCFAF2] border border-[#EDE7DC] px-2.5 sm:px-4 pt-5 sm:pt-6 pb-4 flex flex-col items-center justify-center text-center rounded-sm transition-all duration-700 ease-out transform-gpu border-b-[4px] sm:border-b-[5px] ${theme?.borderAccent || 'border-b-[#5C3A21]'} ${craftStyle.rotateClass} shadow-[3px_8px_18px_rgba(92,58,33,0.06)] group-hover:shadow-[10px_25px_50px_rgba(92,58,33,0.12)] group-hover:-translate-y-3 group-hover:rotate-y-6 group-hover:rotate-0`}
       >
         <div className="absolute inset-0 bg-[#F7F4EB] border border-[#EAE3D5] rounded-sm -z-10 translate-x-1 translate-y-1 opacity-0 group-hover:opacity-100 transition-all duration-500 transform-gpu" />
 
@@ -100,12 +99,13 @@ const PolaroidCard = memo(({ member, idx, theme }) => {
           </div>
         </div>
 
-        <div className="w-full min-w-0 px-0.5 relative z-10">
-          <span className={`text-[8px] sm:text-[9.5px] font-bold tracking-[0.12em] px-2.5 py-0.5 rounded-full ${theme?.badge || 'bg-[#FAF6F0] text-[#5C3A21]'} border uppercase inline-block mb-2 max-w-full truncate`}>
+        {/* INFO WRAPPER: Dioptimalkan agar teks panjang membungkus ke bawah dengan rapi */}
+        <div className="w-full min-w-0 px-0.5 relative z-10 flex flex-col items-center justify-start min-h-[4.5rem] sm:min-h-0">
+          <span className={`text-[8px] sm:text-[9.5px] font-bold tracking-[0.08em] sm:tracking-[0.12em] px-2 py-1 rounded-md ${theme?.badge || 'bg-[#FAF6F0] text-[#5C3A21]'} border uppercase inline-block mb-2 whitespace-normal leading-tight text-center break-words w-full`}>
             {member?.role || member?.category || 'Pelayan'}
           </span>
           
-          <h4 className="text-[12px] sm:text-base font-bold text-[#362113] tracking-tight leading-snug min-h-[2.8rem] sm:min-h-0 flex items-center justify-center break-words font-serif group-hover:text-[#8C5A36] transition-colors">
+          <h4 className="text-[12px] sm:text-base font-bold text-[#362113] tracking-tight leading-snug mt-auto w-full break-words font-serif group-hover:text-[#8C5A36] transition-colors line-clamp-2 sm:line-clamp-none">
             {memberName}
           </h4>
         </div>
@@ -168,14 +168,14 @@ export default function AnggotaClientSection({ initialMembers = [] }) {
     <div className="space-y-20 sm:space-y-28 max-w-7xl mx-auto px-2 sm:px-8 py-8 selection:bg-[#5C3A21]/10 selection:text-[#362113]">
       <div className="space-y-24 sm:space-y-32 text-center">
 
-        {/* ─── 1. KLASTER INTI TE (DI-TENGAN KAN UNTUK MOBILE) ─── */}
+        {/* ─── 1. KLASTER INTI TE ─── */}
         {(activeTab === 'Semua' || activeTab === 'Inti TE') && totalIntiCount > 0 && (
           <div className="w-full py-2 animate-fade-in duration-500">
             <div className="relative pt-12 sm:pt-16 w-full max-w-5xl mx-auto border-t border-dashed border-[#DFD8CC]">
               
               <div className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-[#D4AF37] text-white text-[9.5px] sm:text-[11px] font-black px-7 sm:px-8 py-1.5 sm:py-2 rounded-full shadow-[0_4px_15px_rgba(212,175,55,0.2)] uppercase tracking-[0.2em] whitespace-nowrap flex items-center gap-1.5">
                 <Sparkles size={11} className="fill-white text-white" />
-                Pengurus Inti
+                Dewan Pengurus Inti
               </div>
 
               <div className="space-y-12 sm:space-y-20 w-full">
@@ -194,7 +194,6 @@ export default function AnggotaClientSection({ initialMembers = [] }) {
                         <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]/40" />
                       </div>
                       
-                      {/* Menggunakan flex dan justify-center agar posisi kartu selalu simetris di tengah HP */}
                       <div className="flex flex-wrap justify-center gap-x-4 gap-y-8 sm:gap-10 px-1 w-full mx-auto max-w-sm sm:max-w-full">
                         {roleMembers.map((member, idx) => (
                           <PolaroidCard 
@@ -230,7 +229,6 @@ export default function AnggotaClientSection({ initialMembers = [] }) {
                   {category}
                 </div>
 
-                {/* Grid 2 kolom seimbang untuk halaman seksi biasa */}
                 <div className="flex flex-wrap justify-center gap-x-4 gap-y-8 sm:gap-8 items-center">
                   {displayMembers.map((member, idx) => (
                     <PolaroidCard 
