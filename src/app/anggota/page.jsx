@@ -40,7 +40,7 @@ export default async function AnggotaPage() {
           {/* Badge Aksen Emas (10% Gold Accent) */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-[#FFFDF4] border border-[#F5E6C4] text-[#B8860B] text-[10px] font-bold tracking-widest uppercase shadow-[0_2px_10px_rgba(212,175,55,0.05)]">
             <Sparkles size={10} className="text-[#D4AF37] fill-[#D4AF37]" />
-            Keluarga Besar Pelayan Altar
+            Keluarga Besar Team Evangelisasi
           </div>
           
           {/* Judul Struktur Kontras Cokelat (30% Struktur) */}
