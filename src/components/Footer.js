@@ -25,7 +25,7 @@ export default function Footer() {
             <div className="flex items-center gap-3 select-none">
               <div className="relative w-10 h-10 bg-white/10 border border-white/10 rounded-xl flex items-center justify-center shadow-sm">
                 <Image 
-                  src="/logo/logo.png" 
+                  src="/logo/logo1.png" 
                   alt="Logo TE Footer" 
                   fill
                   sizes="40px"
@@ -81,6 +81,7 @@ export default function Footer() {
               Sekretariat & Kontak
             </h4>
             <ul className="flex flex-col gap-3 text-xs md:text-sm text-stone-300 font-medium">
+              {/* Bagian yang tadi error, sekarang sudah rapi menggunakan pembuka dan penutup <li> */}
               <li className="flex items-start gap-2.5">
                 <MapPin size={16} className="text-[#D4AF37] shrink-0 mt-0.5" />
                 <span className="leading-relaxed">
@@ -112,15 +113,14 @@ export default function Footer() {
               </a>
 
               <a 
-                href="https://youtube.com" 
+                href="https://tiktok.com" 
                 target="_blank" 
                 rel="noreferrer" 
                 className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-stone-300 hover:bg-white hover:text-[#6F4E37] transition-all duration-200"
-                aria-label="Youtube"
+                aria-label="TikTok"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/>
-                  <polygon points="10 15 15 12 10 9 10 15" fill="currentColor"/>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 12a4 4 0 1 0 4 4V4a8 8 0 0 0 8 8" />
                 </svg>
               </a>
             </div>

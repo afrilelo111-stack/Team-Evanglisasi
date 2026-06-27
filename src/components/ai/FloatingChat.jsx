@@ -22,8 +22,6 @@ export default function FloatingChat() {
         aria-label={open ? "Tutup Chat" : "Buka Chat"}
         className={`
           fixed
-          ${open ? "bottom-8" : "bottom-6"}
-          right-6
           z-[999]
           flex
           h-14
@@ -40,6 +38,15 @@ export default function FloatingChat() {
           hover:bg-[#B8931F]
           hover:shadow-2xl
           active:scale-95
+
+          /* 📱 PENYESUAIAN POSISI MOBILE (ANTI-KETUTUPAN NAVBAR) */
+          /* Default HP: posisi bottom sengaja dinaikkan agar melompati bar navigasi bawah */
+          ${open ? "bottom-6" : "bottom-24"} 
+          right-4
+
+          /* 💻 POSISI LAPTOP / PC (KEMBALI NORMAL) */
+          md:right-6
+          ${open ? "md:bottom-8" : "md:bottom-6"}
         `}
       >
         {/* Icon Close */}

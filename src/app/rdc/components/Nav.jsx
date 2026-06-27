@@ -202,21 +202,6 @@ function TopBar({ toggleSidebar, pageTitle }) {
 
           {profileOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white border-2 border-[#C5B5A5] shadow-[6px_6px_0_0_#E8D5C4] z-50 py-1 animate-in fade-in slide-in-from-top-2 duration-200">
-              <Link
-                href="/admin/profile"
-                className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-[#4A2F1D] hover:bg-[#FAF8F5] transition-colors"
-              >
-                <User size={14} />
-                <span>Profil Saya</span>
-              </Link>
-              <Link
-                href="/admin/settings"
-                className="flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-[#4A2F1D] hover:bg-[#FAF8F5] transition-colors"
-              >
-                <Settings size={14} />
-                <span>Pengaturan</span>
-              </Link>
-              <hr className="border-[#E8D5C4] my-1" />
               <button
                 onClick={handleLogout}
                 disabled={isPending}
