@@ -52,25 +52,25 @@ const PolaroidCard = memo(({ member, idx, theme }) => {
 
   return (
     <div
-      className={`relative bg-white border border-[#E8DFD5]/60 rounded-xl px-2 sm:px-4 flex flex-col items-center justify-center text-center shadow-[0_6px_18px_rgba(92,58,33,0.03)] hover:shadow-[0_12px_24px_rgba(92,58,33,0.07)] hover:-translate-y-1 transition-all duration-500 transform border-b-4 ${theme?.borderAccent || 'border-b-[#5C3A21]'} ${style.rotate} ${style.offset} w-[145px] sm:w-48 flex-shrink-0 group mx-auto`}
+      className={`relative bg-white border border-[#E8DFD5]/60 rounded-xl px-2.5 sm:px-4 flex flex-col items-center justify-center text-center shadow-[0_6px_18px_rgba(92,58,33,0.03)] hover:shadow-[0_12px_24px_rgba(92,58,33,0.07)] hover:-translate-y-1 transition-all duration-500 transform border-b-4 ${theme?.borderAccent || 'border-b-[#5C3A21]'} ${style.rotate} ${style.offset} w-[160px] sm:w-56 flex-shrink-0 group mx-auto`}
     >
       {/* Washi Tape Art */}
       <div className={`absolute -top-2.5 ${style.tape} transform -translate-x-1/2 w-9 sm:w-11 h-4 bg-white/50 backdrop-blur-[1.5px] border border-white/80 shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-transform group-hover:scale-105 group-hover:bg-white/70`} />
 
-      {/* Frame Polaroid dengan Proteksi Gambar Rusak */}
-      <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden bg-[#FAF9F5] border border-slate-100 mb-3 flex-shrink-0 shadow-inner">
+      {/* Frame Polaroid - UKURAN FOTO DIPERBESAR DI SINI */}
+      <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-lg overflow-hidden bg-[#FAF9F5] border border-slate-100 mb-3 flex-shrink-0 shadow-inner">
         {imageUrl && !imgError ? (
           <Image
             src={imageUrl}
             alt={memberName}
             fill
-            sizes="(max-width: 640px) 96px, 112px"
+            sizes="(max-width: 640px) 112px, 144px"
             className="object-cover transition-transform duration-700 grayscale-[10%] group-hover:grayscale-0 group-hover:scale-105"
             onError={() => setImgError(true)}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-[#A38A75]/40 bg-[#FAF6F0]" aria-label="Foto tidak tersedia">
-            <User size={28} />
+            <User size={36} className="sm:size-10" />
           </div>
         )}
       </div>
@@ -81,7 +81,6 @@ const PolaroidCard = memo(({ member, idx, theme }) => {
           {member?.role || member?.category || 'Pelayan'}
         </span>
         
-        {/* PERBAIKAN: Menghapus truncate, menggunakan font-size adaptif, serta min-height agar grid tetap presisi */}
         <h4 className="text-[11px] sm:text-sm font-semibold text-[#3D2616] tracking-tight leading-tight min-h-[2.5rem] sm:min-h-0 flex items-center justify-center break-words transition-colors group-hover:text-[#5C3A21]">
           {memberName}
         </h4>
@@ -95,7 +94,6 @@ PolaroidCard.displayName = 'PolaroidCard';
 export default function AnggotaClientSection({ initialMembers = [] }) {
   const [activeTab] = useState('Semua');
 
-  // ─── AMAN & MEMOIZED: PROSES FILTER DATA DENGAN STRIP DATA NULL/UNDEFINED ───
   const { intiMembersGrouped, totalIntiCount, seksiMembersGrouped } = useMemo(() => {
     const safeMembers = Array.isArray(initialMembers) ? initialMembers : [];
 
