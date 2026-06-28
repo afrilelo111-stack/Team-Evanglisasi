@@ -46,7 +46,7 @@ export async function POST(request) {
       return Response.json(
         {
           success: false,
-          message: "AI sedang dinonaktifkan oleh administrator.",
+          message: "Waduh, Asisten Evang nggak bisa konek ke server nih. Cek internet kamu ya kak!",
         },
         { status: 503 }
       );
