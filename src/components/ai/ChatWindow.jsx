@@ -133,6 +133,12 @@ export default function ChatWindow({ onClose }) {
                 Cara Bergabung
               </button>
               <button
+                onClick={() => handleSendMessage("Apa saja seksi pelayanan atau divisi yang ada di Team Evangelisasi?")}
+                className="px-2.5 py-1 text-[9px] font-bold text-[#4A2F1D] bg-white border border-[#E8D5C4] rounded-lg shadow-[2px_2px_0_0_#E8D5C4] hover:border-[#D4AF37] hover:shadow-[3px_3px_0_0_#D4AF37] transition-all active:scale-95"
+              >
+                Seksi Pelayanan
+              </button>
+              <button
                 onClick={() => handleSendMessage("Kapan jadwal kumpul rutin Team Evangelisasi?")}
                 className="px-2.5 py-1 text-[9px] font-bold text-[#4A2F1D] bg-white border border-[#E8D5C4] rounded-lg shadow-[2px_2px_0_0_#E8D5C4] hover:border-[#D4AF37] hover:shadow-[3px_3px_0_0_#D4AF37] transition-all active:scale-95"
               >
