@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bot, X } from "lucide-react";
+import { Bot, X, Send, Sparkles, Zap } from "lucide-react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 
@@ -21,38 +21,33 @@ export default function ChatWindow({ onClose }) {
     setIsLoading(true);
 
     try {
-      // 🛠️ 1. Pastikan URL endpoint ini mengarah ke lokasi file route.js kamu
-      const response = await fetch("/api/chat", { 
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: textToSend }), // Mengirim key 'message' (Sudah Benar!)
+        body: JSON.stringify({ message: textToSend }),
       });
 
       const data = await response.json();
 
-      // Jika API route mengembalikan error status (400, 500, 503)
       if (!response.ok || !data.success) {
         throw new Error(data.message || "Gagal mengambil respons AI");
       }
 
       const aiMessage = {
         role: "assistant",
-        // 🛠️ 2. PERBAIKAN DI SINI: route.js kamu mengirim 'answer', bukan 'reply'
-        text: data.answer, 
+        text: data.answer,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
       console.error("Error interaksi AI:", error);
-      
-      // Menampilkan pesan error asli dari backend (Misal: "AI sedang dinonaktifkan...")
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          text: error.message || "Waduh, sepertinya jaringan saya sedang terganggu. Boleh coba kirim ulang?",
+          text: error.message || "Maaf, jaringan sedang terganggu. Coba kirim ulang?",
           timestamp: new Date(),
         },
       ]);
@@ -66,23 +61,23 @@ export default function ChatWindow({ onClose }) {
       className="
         fixed
         bottom-24
-        right-8
+        right-4
+        md:right-6
         z-50
 
-        /* 🛠️ ADJUSTMENT UKURAN PROPORSIONAL */
-        w-[380px]               /* Pas, tidak terlalu lebar */
+        w-[360px]
         max-w-[calc(100vw-2rem)]
-        h-[420px]               /* Pendek, kompak, tidak terlalu tinggi */
+        h-[440px]
+        max-h-[80vh]
 
         overflow-hidden
-        rounded-3xl
-        border
-        border-[#E8D7B8]
+        rounded-2xl
 
-        bg-white/95
-        backdrop-blur-xl
+        bg-white
+        border-2
+        border-[#D4AF37]
 
-        shadow-[0_20px_60px_rgba(0,0,0,0.15)]
+        shadow-[8px_8px_0_0_#E8D5C4]
 
         flex
         flex-col
@@ -90,69 +85,99 @@ export default function ChatWindow({ onClose }) {
         animate-in
         fade-in
         zoom-in-95
-        duration-300
+        duration-200
       "
     >
-      {/* Header */}
-      <div className="bg-gradient-to-r from-[#B68A28] via-[#C9A227] to-[#D7B64A] px-5 py-3.5 shrink-0">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
-              <Bot className="text-white" size={20} />
-            </div>
-
-            <div>
-              <h2 className="font-semibold text-white">Team Evangelisasi AI</h2>
-              <div className="mt-1 flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
-                <span className="text-xs text-white/90">Online</span>
-              </div>
+      {/* ─── HEADER KOMPAK ─── */}
+      <div className="bg-[#4A2F1D] px-4 py-3 shrink-0 flex items-center justify-between border-b-2 border-[#D4AF37]">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-lg bg-[#D4AF37] flex items-center justify-center border-2 border-[#FCF9F6] flex-shrink-0">
+            <Bot size={16} className="text-[#4A2F1D]" />
+          </div>
+          <div className="min-w-0">
+            <h2 className="font-serif font-bold text-sm text-[#FCF9F6] truncate leading-tight">
+              TE Assistant
+            </h2>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[9px] font-mono font-medium text-[#D4AF37] tracking-wider">
+                Online
+              </span>
             </div>
           </div>
-
-          <button
-            onClick={onClose}
-            className="h-8 w-8 rounded-full bg-white/20 hover:bg-white/30 transition flex items-center justify-center"
-          >
-            <X size={18} className="text-white" />
-          </button>
         </div>
+
+        <button
+          onClick={onClose}
+          className="w-7 h-7 rounded-lg bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 transition-all flex items-center justify-center flex-shrink-0 border border-[#D4AF37]/30"
+        >
+          <X size={14} className="text-[#FCF9F6]" />
+        </button>
       </div>
 
-      {/* Jendela Daftar Pesan Berjalan */}
-      <ChatMessages messages={messages} isLoading={isLoading} />
+      {/* ─── CHAT MESSAGES ─── */}
+      <div className="flex-1 overflow-y-auto bg-[#FCF9F6] p-3">
+        <ChatMessages messages={messages} isLoading={isLoading} />
 
-      {/* Bagian Quick Action (Hanya muncul jika room chat masih kosong) */}
-      {messages.length === 0 && (
-        <div className="bg-[#FCFBF8] px-5 pb-4 shrink-0">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
-            Pertanyaan Populer
-          </p>
-          <div className="flex flex-wrap gap-2">
-            <button 
-              onClick={() => handleSendMessage("Bagaimana cara bergabung dengan Team Evangelisasi?")}
-              className="rounded-full border border-[#E5D5B5] bg-white px-3 py-1.5 text-xs text-gray-700 hover:bg-[#F6F1E8] transition active:scale-95"
-            >
-              Cara Bergabung
-            </button>
-            <button 
-              onClick={() => handleSendMessage("Kapan jadwal kumpul rutin Team Evangelisasi?")}
-              className="rounded-full border border-[#E5D5B5] bg-white px-3 py-1.5 text-xs text-gray-700 hover:bg-[#F6F1E8] transition active:scale-95"
-            >
-              Jadwal Rutin
-            </button>
-            <button 
-              onClick={() => handleSendMessage("Apa saja jenis kegiatan pelayanan di Team Evangelisasi?")}
-              className="rounded-full border border-[#E5D5B5] bg-white px-3 py-1.5 text-xs text-gray-700 hover:bg-[#F6F1E8] transition active:scale-95"
-            >
-              Kegiatan
-            </button>
+        {/* Quick Actions (hanya jika chat kosong) */}
+        {messages.length === 0 && (
+          <div className="space-y-2.5">
+            <div className="flex items-center gap-1.5 text-[9px] font-mono font-bold text-[#8B5A33] uppercase tracking-widest">
+              <Sparkles size={10} className="text-[#D4AF37]" />
+              <span>Pertanyaan Cepat</span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                onClick={() => handleSendMessage("Bagaimana cara bergabung dengan Team Evangelisasi?")}
+                className="px-3 py-1.5 text-[10px] font-bold text-[#4A2F1D] bg-white border-2 border-[#E8D5C4] rounded-lg shadow-[2px_2px_0_0_#E8D5C4] hover:border-[#D4AF37] hover:shadow-[3px_3px_0_0_#D4AF37] transition-all active:scale-95"
+              >
+                Cara Bergabung
+              </button>
+              <button
+                onClick={() => handleSendMessage("Kapan jadwal kumpul rutin Team Evangelisasi?")}
+                className="px-3 py-1.5 text-[10px] font-bold text-[#4A2F1D] bg-white border-2 border-[#E8D5C4] rounded-lg shadow-[2px_2px_0_0_#E8D5C4] hover:border-[#D4AF37] hover:shadow-[3px_3px_0_0_#D4AF37] transition-all active:scale-95"
+              >
+                Jadwal Rutin
+              </button>
+              <button
+                onClick={() => handleSendMessage("Apa saja jenis kegiatan pelayanan di Team Evangelisasi?")}
+                className="px-3 py-1.5 text-[10px] font-bold text-[#4A2F1D] bg-white border-2 border-[#E8D5C4] rounded-lg shadow-[2px_2px_0_0_#E8D5C4] hover:border-[#D4AF37] hover:shadow-[3px_3px_0_0_#D4AF37] transition-all active:scale-95"
+              >
+                Kegiatan
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* Bagian Form Input Pesan */}
-      <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
+      {/* ─── INPUT ─── */}
+      <div className="shrink-0 bg-white border-t-2 border-[#E8D5C4] p-2.5">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const input = e.currentTarget.querySelector("input");
+            if (input?.value.trim()) {
+              handleSendMessage(input.value);
+              input.value = "";
+            }
+          }}
+          className="flex items-center gap-1.5"
+        >
+          <input
+            type="text"
+            placeholder="Ketik pesan..."
+            disabled={isLoading}
+            className="flex-1 bg-[#FAF8F5] border-2 border-[#D1C0B0] rounded-lg px-3 py-2 text-xs font-medium text-[#4A2F1D] placeholder-[#B5A392] focus:border-[#D4AF37] focus:shadow-[3px_3px_0_0_#E8D5C4] outline-none transition-all disabled:opacity-50"
+          />
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-9 h-9 rounded-lg bg-[#D4AF37] border-2 border-[#4A2F1D] text-[#4A2F1D] flex items-center justify-center shadow-[3px_3px_0_0_#4A2F1D] hover:shadow-[2px_2px_0_0_#4A2F1D] hover:bg-[#C5A059] transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Send size={14} />
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
