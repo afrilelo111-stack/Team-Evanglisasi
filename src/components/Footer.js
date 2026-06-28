@@ -99,7 +99,7 @@ export default function Footer() {
             {/* Media Sosial Minimalis */}
             <div className="flex items-center gap-2 mt-2">
               <a 
-                href="https://instagram.com" 
+                href="https://instagram.com/pelsis_smk3mdo" 
                 target="_blank" 
                 rel="noreferrer" 
                 className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-stone-300 hover:bg-white hover:text-[#6F4E37] transition-all duration-200"
@@ -113,7 +113,7 @@ export default function Footer() {
               </a>
 
               <a 
-                href="https://tiktok.com" 
+                href="https://tiktok.com/@tim.evanglisasi" 
                 target="_blank" 
                 rel="noreferrer" 
                 className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-stone-300 hover:bg-white hover:text-[#6F4E37] transition-all duration-200"
