@@ -30,7 +30,7 @@ export default function Navbar({
   
   const lastScrollY = useRef(0);
 
-  // Daftar item menu - href disesuaikan agar diarahkan ke halaman dinamis yang tepat
+  // Daftar item menu
   const menuItems = [
     { id: "beranda", label: "Beranda", href: "/", icon: House },
     { id: "kegiatan", label: "Kegiatan", href: "/#kegiatan", icon: CalendarDays },
@@ -64,14 +64,20 @@ export default function Navbar({
     }
     lastScrollY.current = currentScroll;
 
-    // 2. Kunci Tab Aktif jika Berada di Halaman Luar (About / Anggota)
-    const isSubPage = pathname === "/about" || pathname === "/anggota" || pathname?.startsWith("/anggota");
+    // 2. Kunci Tab Aktif jika Berada di Halaman Luar (/about, /pembina, atau /anggota)
+    const isSubPage = 
+      pathname === "/about" || 
+      pathname === "/pembina" || 
+      pathname === "/anggota" || 
+      pathname?.startsWith("/anggota") ||
+      pathname?.startsWith("/pembina");
+
     if (isSubPage) {
       setActiveTab("detail");
-      return; // Stop eksekusi agar tracking ID DOM halaman utama tidak berjalan di sub-page
+      return; // Stop eksekusi tracking section halaman utama
     }
 
-    // 3. Deteksi Section Aktif di Halaman Utama (Home Page Scroll Tracking)
+    // 3. Deteksi Section Aktif di Halaman Utama
     const sections = ["beranda", "about", "sections", "kegiatan", "whyjoin"];
     const scrollPosition = currentScroll + (window.innerHeight / 3);
 
@@ -93,10 +99,23 @@ export default function Navbar({
     }
   }, [isReady, pathname, setActiveTab]);
 
+  // Efek tambahan untuk langsung mengunci tab "detail" saat rute berubah tanpa menunggu event scroll
+  useEffect(() => {
+    const isSubPage = 
+      pathname === "/about" || 
+      pathname === "/pembina" || 
+      pathname === "/anggota" || 
+      pathname?.startsWith("/anggota") ||
+      pathname?.startsWith("/pembina");
+
+    if (isSubPage) {
+      setActiveTab("detail");
+    }
+  }, [pathname, setActiveTab]);
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     
-    // Sinkronisasi status posisi navbar saat pertama kali dimuat
     const initialSync = setTimeout(() => {
       handleScroll();
     }, 50);

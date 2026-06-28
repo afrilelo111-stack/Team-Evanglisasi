@@ -212,7 +212,7 @@ export default function GuruAgamaSection({ initialTeachers = [] }) {
               
               <div className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-[#D4AF37] text-white text-[8px] sm:text-[10px] font-black px-5 sm:px-7 py-1 sm:py-1.5 shadow-[0_4px_12px_rgba(212,175,55,0.2)] uppercase tracking-[0.2em] whitespace-nowrap flex items-center gap-1.5 border-2 border-[#4A2F1D]">
                 <Sparkles size={10} className="fill-white text-white" />
-                Struktur Penasihat
+                 Pembina
               </div>
 
               <div className="space-y-10 sm:space-y-16 w-full">
