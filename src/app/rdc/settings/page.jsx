@@ -19,7 +19,7 @@ import AdminNav from "../components/Nav";
 export default function AISettingsPage() {
   const [formData, setFormData] = useState({
     enabled: true,
-    model: "gemini-2.5-flash",
+    model: "llama-3.1-8b-instant", // Diperbarui: Menggunakan model aktif terbaru sebagai default awal
     system_prompt: "",
     temperature: 0.7,
     max_output_tokens: 1000,
@@ -44,9 +44,17 @@ export default function AISettingsPage() {
         const resData = await res.json();
 
         if (isMounted && resData.success && resData.data) {
+          // Fallback otomatis jika data model di database masih menyimpan model usang
+          let savedModel = resData.data.model;
+          if (!savedModel || savedModel === "llama3-8b-8192") {
+            savedModel = "llama-3.1-8b-instant";
+          } else if (savedModel === "llama3-70b-8192") {
+            savedModel = "llama-3.3-70b-versatile";
+          }
+
           setFormData({
             enabled: resData.data.enabled,
-            model: resData.data.model || "gemini-2.5-flash",
+            model: savedModel,
             system_prompt: resData.data.system_prompt || "",
             temperature: resData.data.temperature || 0.7,
             max_output_tokens: resData.data.max_output_tokens || 1000,
@@ -120,7 +128,7 @@ export default function AISettingsPage() {
               Konfigurasi <span className="text-[#D4AF37]">AI</span>
             </h1>
             <p className="text-xs font-mono text-[#8B5A33] tracking-widest uppercase mt-0.5">
-              Kelola otak dan perilaku Gemini AI untuk Chatbot Team Evangelisasi
+              Kelola otak dan perilaku Model AI untuk Chatbot Team Evangelisasi
             </p>
           </div>
         </div>
@@ -187,8 +195,17 @@ export default function AISettingsPage() {
                 onChange={(e) => setFormData({ ...formData, model: e.target.value })}
                 className="w-full bg-white border-2 border-[#D1C0B0] rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-[#D4AF37] focus:shadow-[4px_4px_0_0_#E8D5C4] transition-all text-[#4A2F1D] shadow-[2px_2px_0_0_#E8D5C4]"
               >
-                <option value="gemini-2.5-flash">Gemini 2.5 Flash ⚡</option>
-                <option value="gemini-2.5-pro">Gemini 2.5 Pro 🧠</option>
+                {/* Diperbarui: Daftar Model Groq Terbaru yang Valid & Aktif */}
+                <optgroup label="Groq Cloud API (Aktif & Direkomendasikan)">
+                  <option value="llama-3.1-8b-instant">Meta Llama 3.1 8B ⚡ (Super Cepat)</option>
+                  <option value="llama-3.3-70b-versatile">Meta Llama 3.3 70B 🧠 (Sangat Pintar)</option>
+                  <option value="gemma2-9b-it">Google Gemma 2 9B 💎</option>
+                </optgroup>
+                
+                <optgroup label="Google AI Studio (Cadangan)">
+                  <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                  <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                </optgroup>
               </select>
             </div>
 

@@ -19,7 +19,8 @@ import {
   Sparkles,
   Cross,
   Users,
-  BookOpen
+  BookOpen,
+  ArrowLeft // 👈 tambahkan ArrowLeft
 } from "lucide-react";
 
 // ─── 1. KOMPONEN ISI ───
@@ -144,8 +145,20 @@ function LoginContent() {
         <div className="absolute top-8 right-8 w-12 h-12 border-2 border-[#D4AF37]/10 rotate-12 hidden sm:block" />
         <div className="absolute bottom-8 left-8 w-8 h-8 border-2 border-[#D4AF37]/10 -rotate-12 hidden sm:block" />
 
+        {/* ─── TOMBOL KEMBALI KE BERANDA ─── */}
+        <div className="absolute top-6 left-6 sm:top-8 sm:left-8 z-10">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 border-2 border-[#D1C0B0] bg-white hover:border-[#D4AF37] hover:shadow-[3px_3px_0_0_#E8D5C4] text-[#4A2F1D] text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-200 group"
+          >
+            <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
+            <span className="hidden sm:inline">Kembali ke Beranda</span>
+            <span className="sm:hidden">Beranda</span>
+          </Link>
+        </div>
+
         {/* Logo Mobile */}
-        <div className="flex lg:hidden justify-between items-center mb-8 select-none">
+        <div className="flex lg:hidden justify-center items-center mb-8 select-none mt-6">
           <div className="flex items-center gap-3">
             <div className="p-2 border-2 border-[#D4AF37] bg-[#FCF9F6] shadow-[3px_3px_0_0_#D4AF37]">
               <Image src="/logo/logo.png" alt="Logo" width={28} height={28} />

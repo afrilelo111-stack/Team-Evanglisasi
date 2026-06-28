@@ -1,4 +1,4 @@
-import { askGemini } from "@/lib/gemini";
+import { askGroq } from "@/lib/groq";
 import { getAISettings } from "@/lib/ai";
 
 export async function POST(request) {
@@ -28,7 +28,7 @@ export async function POST(request) {
       );
     }
 
-    // Ambil pengaturan AI
+    // Ambil pengaturan AI dari database
     const settings = await getAISettings();
 
     if (!settings) {
@@ -41,7 +41,7 @@ export async function POST(request) {
       );
     }
 
-    // AI dimatikan
+    // AI dimatikan secara global
     if (!settings.enabled) {
       return Response.json(
         {
@@ -52,18 +52,21 @@ export async function POST(request) {
       );
     }
 
-    // Minta jawaban dari Gemini
-    const answer = await askGemini(message, settings);
+    // Minta jawaban dari Groq Cloud API
+    const answer = await askGroq(message, settings);
 
+    // Perbaikan utama: Mengembalikan objek 'data' agar tidak memicu error di ChatWindow.jsx
+    // Ganti blok return sukses di src/app/api/chat/route.js menjadi seperti ini:
     return Response.json(
       {
         success: true,
-        answer,
+        data: answer,   // Mengamankan jika UI membaca data.data
+        answer: answer, // Mengamankan jika UI membaca data.answer
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("[AI API]", error);
+    console.error("[AI API] Error:", error);
 
     return Response.json(
       {
