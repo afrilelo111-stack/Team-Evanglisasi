@@ -64,13 +64,21 @@ export default async function AnggotaPage() {
             </span>
           </h1>
           
-
           
           {/* Deskripsi */}
           <p className="text-sm md:text-base text-[#8B5A33] font-medium max-w-lg mx-auto leading-relaxed mt-4">
             Sinergi dedikasi tinggi dalam kesatuan divisi, bergerak bersama melayani demi keindahan pekerjaan rumah Tuhan.
           </p>
           
+          {/* Garis Dekoratif */}
+          <div className="flex items-center justify-center gap-4 mt-4">
+            <div className="w-12 h-[1px] bg-[#D4AF37]/30" />
+            <Sparkles size={14} className="text-[#D4AF37]" />
+            <div className="w-12 h-[1px] bg-[#D4AF37]/30" />
+          </div>
+          
+          {/* Jumlah Anggota (dinamis) */}
+
         </div>
 
         {/* ─── KONTEN UTAMA ─── */}
