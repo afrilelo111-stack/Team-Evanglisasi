@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bot, X, Send, Sparkles, Zap } from "lucide-react";
+import { Bot, X, Send, Sparkles } from "lucide-react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 
@@ -23,9 +23,7 @@ export default function ChatWindow({ onClose }) {
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: textToSend }),
       });
 
@@ -60,15 +58,16 @@ export default function ChatWindow({ onClose }) {
     <div
       className="
         fixed
-        bottom-24
+        bottom-[90px]
+        md:bottom-[80px]
         right-4
         md:right-6
         z-50
 
-        w-[360px]
+        w-[340px]
         max-w-[calc(100vw-2rem)]
-        h-[440px]
-        max-h-[80vh]
+        h-[420px]
+        max-h-[70vh]
 
         overflow-hidden
         rounded-2xl
@@ -77,7 +76,7 @@ export default function ChatWindow({ onClose }) {
         border-2
         border-[#D4AF37]
 
-        shadow-[8px_8px_0_0_#E8D5C4]
+        shadow-[7px_7px_0_0_#E8D5C4]
 
         flex
         flex-col
@@ -88,11 +87,11 @@ export default function ChatWindow({ onClose }) {
         duration-200
       "
     >
-      {/* ─── HEADER KOMPAK ─── */}
-      <div className="bg-[#4A2F1D] px-4 py-3 shrink-0 flex items-center justify-between border-b-2 border-[#D4AF37]">
+      {/* ─── HEADER ─── */}
+      <div className="bg-[#4A2F1D] px-3.5 py-2.5 shrink-0 flex items-center justify-between border-b-2 border-[#D4AF37]">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-[#D4AF37] flex items-center justify-center border-2 border-[#FCF9F6] flex-shrink-0">
-            <Bot size={16} className="text-[#4A2F1D]" />
+          <div className="w-7 h-7 rounded-lg bg-[#D4AF37] flex items-center justify-center border-2 border-[#FCF9F6] flex-shrink-0">
+            <Bot size={14} className="text-[#4A2F1D]" />
           </div>
           <div className="min-w-0">
             <h2 className="font-serif font-bold text-sm text-[#FCF9F6] truncate leading-tight">
@@ -100,7 +99,7 @@ export default function ChatWindow({ onClose }) {
             </h2>
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[9px] font-mono font-medium text-[#D4AF37] tracking-wider">
+              <span className="text-[8px] font-mono font-medium text-[#D4AF37] tracking-wider">
                 Online
               </span>
             </div>
@@ -109,9 +108,9 @@ export default function ChatWindow({ onClose }) {
 
         <button
           onClick={onClose}
-          className="w-7 h-7 rounded-lg bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 transition-all flex items-center justify-center flex-shrink-0 border border-[#D4AF37]/30"
+          className="w-6 h-6 rounded-lg bg-[#D4AF37]/20 hover:bg-[#D4AF37]/40 transition-all flex items-center justify-center flex-shrink-0 border border-[#D4AF37]/30"
         >
-          <X size={14} className="text-[#FCF9F6]" />
+          <X size={13} className="text-[#FCF9F6]" />
         </button>
       </div>
 
@@ -122,26 +121,26 @@ export default function ChatWindow({ onClose }) {
         {/* Quick Actions (hanya jika chat kosong) */}
         {messages.length === 0 && (
           <div className="space-y-2.5">
-            <div className="flex items-center gap-1.5 text-[9px] font-mono font-bold text-[#8B5A33] uppercase tracking-widest">
-              <Sparkles size={10} className="text-[#D4AF37]" />
+            <div className="flex items-center gap-1.5 text-[8px] font-mono font-bold text-[#8B5A33] uppercase tracking-widest">
+              <Sparkles size={9} className="text-[#D4AF37]" />
               <span>Pertanyaan Cepat</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
               <button
                 onClick={() => handleSendMessage("Bagaimana cara bergabung dengan Team Evangelisasi?")}
-                className="px-3 py-1.5 text-[10px] font-bold text-[#4A2F1D] bg-white border-2 border-[#E8D5C4] rounded-lg shadow-[2px_2px_0_0_#E8D5C4] hover:border-[#D4AF37] hover:shadow-[3px_3px_0_0_#D4AF37] transition-all active:scale-95"
+                className="px-2.5 py-1 text-[9px] font-bold text-[#4A2F1D] bg-white border border-[#E8D5C4] rounded-lg shadow-[2px_2px_0_0_#E8D5C4] hover:border-[#D4AF37] hover:shadow-[3px_3px_0_0_#D4AF37] transition-all active:scale-95"
               >
                 Cara Bergabung
               </button>
               <button
                 onClick={() => handleSendMessage("Kapan jadwal kumpul rutin Team Evangelisasi?")}
-                className="px-3 py-1.5 text-[10px] font-bold text-[#4A2F1D] bg-white border-2 border-[#E8D5C4] rounded-lg shadow-[2px_2px_0_0_#E8D5C4] hover:border-[#D4AF37] hover:shadow-[3px_3px_0_0_#D4AF37] transition-all active:scale-95"
+                className="px-2.5 py-1 text-[9px] font-bold text-[#4A2F1D] bg-white border border-[#E8D5C4] rounded-lg shadow-[2px_2px_0_0_#E8D5C4] hover:border-[#D4AF37] hover:shadow-[3px_3px_0_0_#D4AF37] transition-all active:scale-95"
               >
                 Jadwal Rutin
               </button>
               <button
                 onClick={() => handleSendMessage("Apa saja jenis kegiatan pelayanan di Team Evangelisasi?")}
-                className="px-3 py-1.5 text-[10px] font-bold text-[#4A2F1D] bg-white border-2 border-[#E8D5C4] rounded-lg shadow-[2px_2px_0_0_#E8D5C4] hover:border-[#D4AF37] hover:shadow-[3px_3px_0_0_#D4AF37] transition-all active:scale-95"
+                className="px-2.5 py-1 text-[9px] font-bold text-[#4A2F1D] bg-white border border-[#E8D5C4] rounded-lg shadow-[2px_2px_0_0_#E8D5C4] hover:border-[#D4AF37] hover:shadow-[3px_3px_0_0_#D4AF37] transition-all active:scale-95"
               >
                 Kegiatan
               </button>
@@ -167,14 +166,14 @@ export default function ChatWindow({ onClose }) {
             type="text"
             placeholder="Ketik pesan..."
             disabled={isLoading}
-            className="flex-1 bg-[#FAF8F5] border-2 border-[#D1C0B0] rounded-lg px-3 py-2 text-xs font-medium text-[#4A2F1D] placeholder-[#B5A392] focus:border-[#D4AF37] focus:shadow-[3px_3px_0_0_#E8D5C4] outline-none transition-all disabled:opacity-50"
+            className="flex-1 bg-[#FAF8F5] border-2 border-[#D1C0B0] rounded-lg px-3 py-2 text-xs font-medium text-[#4A2F1D] placeholder-[#B5A392] focus:border-[#D4AF37] focus:shadow-[2px_2px_0_0_#E8D5C4] outline-none transition-all disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={isLoading}
-            className="w-9 h-9 rounded-lg bg-[#D4AF37] border-2 border-[#4A2F1D] text-[#4A2F1D] flex items-center justify-center shadow-[3px_3px_0_0_#4A2F1D] hover:shadow-[2px_2px_0_0_#4A2F1D] hover:bg-[#C5A059] transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-8 h-8 rounded-lg bg-[#D4AF37] border-2 border-[#4A2F1D] text-[#4A2F1D] flex items-center justify-center shadow-[2px_2px_0_0_#4A2F1D] hover:shadow-[1px_1px_0_0_#4A2F1D] hover:bg-[#C5A059] transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Send size={14} />
+            <Send size={13} />
           </button>
         </form>
       </div>

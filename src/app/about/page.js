@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
-import DetailsSection from "@/app/about/components/Hero"; 
-import VisiMisiSection from "@/app/about/components/MIsi";
-import SeksiPelayananSection from "@/app/about/components/Seksi"; 
+import DetailsSection from "@/components/about/Hero"; 
+import VisiMisiSection from "@/components/about/MIsi";
+import SeksiPelayananSection from "@/components/about/Seksi"; 
 
 export default function HomePage() {
   // Gunakan huruf kecil sebagai standardisasi state agar minim kesalahan typo

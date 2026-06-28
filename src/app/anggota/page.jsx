@@ -1,7 +1,7 @@
 // app/anggota/page.jsx
 import { createClient } from '@/lib/supabase/server';
 import AnggotaClientSection from './AnggotaClientSection';
-import Navbar from './components/Navbar';
+import Navbar from '../../components/anggota/Navbar';
 import { Sparkles, Users, Cross, Award } from 'lucide-react';
 
 export const revalidate = 0;

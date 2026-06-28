@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import GuruAgamaSection from './GuruAgamaSection';
-import Navbar from '../anggota/components/Navbar'; 
+import Navbar from '../../components/anggota/Navbar'; 
 import { BookOpen, Cross, Sparkles, Users } from 'lucide-react';
 
 // ─── REVALIDASI ───
