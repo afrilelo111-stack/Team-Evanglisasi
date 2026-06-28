@@ -2,34 +2,64 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/beranda";
 import Kegiatan from "@/components/kegiatan";
 import WhyJoin from "@/components/WhyJoin";
 import Footer from "@/components/Footer";
+import Image from "next/image";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("Beranda");
   const [showMobileNav, setShowMobileNav] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [particles, setParticles] = useState([]);
+  const [mounted, setMounted] = useState(false);
 
+  // ─── GENERATE PARTICLES ONLY ON CLIENT ───
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2500); 
-    return () => clearTimeout(timer);
+    setMounted(true);
+    const newParticles = Array.from({ length: 20 }).map(() => {
+      const size = Math.random() * 3 + 1;
+      const left = Math.random() * 100;
+      const duration = Math.random() * 10 + 8;
+      const delay = Math.random() * 5;
+      const driftX = Math.random() * 30 - 15;
+      const opacity = Math.random() * 0.3 + 0.1;
+      const blur = size > 2.5 ? 1.2 : 0.3;
+      return { size, left, duration, delay, driftX, opacity, blur };
+    });
+    setParticles(newParticles);
   }, []);
 
-  // Auto-Hide Mobile Navbar
+  // ─── LOADING SCREEN ───
+  useEffect(() => {
+    let startTime = Date.now();
+    const duration = 3000;
+
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min((elapsed / duration) * 100, 100);
+      setLoadingProgress(progress);
+
+      if (progress >= 100) {
+        clearInterval(interval);
+        setTimeout(() => setIsLoading(false), 500);
+      }
+    }, 16);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // ─── AUTO-HIDE MOBILE NAV ───
   useEffect(() => {
     let lastScrollY = window.scrollY;
     let ticking = false;
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
       if (!ticking) {
         window.requestAnimationFrame(() => {
           if (currentScrollY > lastScrollY && currentScrollY > 150) {
@@ -48,12 +78,9 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Precision Intersection Observer
+  // ─── INTERSECTION OBSERVER ───
   useEffect(() => {
-    if (isLoading) return;
-
     const sections = ["beranda", "about", "kegiatan", "whyjoin"];
-    
     const tabMapping = {
       beranda: "Beranda",
       about: "Tentang",
@@ -89,215 +116,313 @@ export default function Home() {
         if (element) observer.unobserve(element);
       });
     };
-  }, [isLoading]);
+  }, []);
 
+  // ─── ANIMASI ───
   const fadeInUp = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } 
-    }
-  };
-
-  const mainWrapperVariants = {
-    hidden: { opacity: 0, y: 80 },
+    hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 1.2,
-        ease: [0.16, 1, 0.3, 1],
-        delay: 0.1
-      }
-    }
+      transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+    },
   };
 
-  // Membagi kata menjadi array huruf untuk teks loading kinetik
-  const titleWords = "TEAM EVANGELISASI".split("");
-  const containerVariants = {
-    animate: { transition: { staggerChildren: 0.03 } }
-  };
-  const letterVariants = {
-    initial: { y: 30, opacity: 0 },
-    animate: { y: 0, opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
-  };
-
-  return (
-    <>
+  // ─── LOADING SCREEN ───
+  if (isLoading) {
+    return (
       <AnimatePresence mode="wait">
-        {isLoading && (
-          <motion.div 
-            className="fixed inset-0 z-[99999] flex items-center justify-center bg-[#050302] select-none overflow-hidden font-sans antialiased"
-            exit={{ 
-              opacity: 0,
-              transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 } 
-            }}
-          >
-            {/* Tirai Arsitektural Gelap Membelah Kiri & Kanan */}
-            <motion.div 
-              initial={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ duration: 1.2, ease: [0.85, 0, 0.15, 1] }}
-              className="absolute inset-y-0 left-0 w-1/2 bg-[#050302] border-r border-stone-900/30"
-            />
-            <motion.div 
-              initial={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ duration: 1.2, ease: [0.85, 0, 0.15, 1] }}
-              className="absolute inset-y-0 right-0 w-1/2 bg-[#050302] border-l border-stone-900/30"
-            />
+        <motion.div
+          key="loader"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, transition: { duration: 0.7, ease: "easeInOut" } }}
+          className="fixed inset-0 z-[9999] bg-[#050302] flex items-center justify-center overflow-hidden"
+        >
+          {/* ─── LAPISAN TEKSTUR ─── */}
+          <div className="absolute inset-0 opacity-[0.03] bg-[url('/noise.png')] mix-blend-overlay pointer-events-none" />
+          <div className="absolute inset-0 opacity-[0.015] bg-[radial-gradient(#D4AF37_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none" />
 
-            {/* KONTEN UTAMA LOADING SCREEN */}
-            <div className="relative z-10 flex flex-col items-center">
-              
-              {/* Frame Logo Premium dengan Efek Menyala/Neon Core */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.92 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                className="mb-8 p-5 border border-stone-800/80 bg-stone-950/60 backdrop-blur-md shadow-[0_0_50px_rgba(214,175,55,0.15)] rounded-2xl relative"
-              >
-                {/* Layer Pendaran Emas Lembut di Belakang Logo */}
-                <div className="absolute inset-0 bg-[#D4AF37] blur-[35px] rounded-full opacity-20 animate-pulse duration-[4000ms]" />
+          {/* ─── GLOW SINEMATIK ─── */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 2, ease: "easeOut" }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#D4AF37]/8 blur-[150px] rounded-full pointer-events-none"
+          />
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 0.5 }}
+            transition={{ duration: 2.5, delay: 0.5, ease: "easeOut" }}
+            className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-[#D4AF37]/4 blur-[120px] rounded-full pointer-events-none"
+          />
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 0.3 }}
+            transition={{ duration: 2.5, delay: 0.8, ease: "easeOut" }}
+            className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] bg-[#D4AF37]/4 blur-[100px] rounded-full pointer-events-none"
+          />
 
-                {/* Aksen Dekoratif Pojok */}
-                <span className="absolute -top-1 -left-1 text-[8px] text-[#D4AF37]/50 font-mono">+</span>
-                <span className="absolute -top-1 -right-1 text-[8px] text-[#D4AF37]/50 font-mono">+</span>
-                <span className="absolute -bottom-2 -left-1 text-[8px] text-[#D4AF37]/50 font-mono">+</span>
-                <span className="absolute -bottom-2 -right-1 text-[8px] text-[#D4AF37]/50 font-mono">+</span>
-                
-                <Image 
-                  src="/logo/logo1.png" 
-                  alt="Logo TE" 
-                  width={65} 
-                  height={65} 
-                  className="object-contain relative z-10 filter drop-shadow-[0_0_15px_rgba(214,175,55,0.65)] drop-shadow-[0_0_30px_rgba(214,175,55,0.3)]"
-                  priority 
-                />
-              </motion.div>
+          {/* ─── LINGKARAN KONSENTRIS ─── */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] border-2 border-[#D4AF37]/4 rounded-full pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border-[1px] border-[#D4AF37]/6 rounded-full pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] border-[1px] border-[#D4AF37]/8 rounded-full pointer-events-none" />
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] border-[1px] border-[#D4AF37]/5 rounded-full pointer-events-none border-dashed"
+          />
 
-              {/* Teks Loading Bergradasi seperti di Gambar */}
-              <motion.div
-                variants={containerVariants}
-                initial="initial"
-                animate="animate"
-                className="flex justify-center items-center overflow-hidden mb-3"
-              >
-                {titleWords.map((letter, index) => (
-                  <motion.span
-                    key={index}
-                    variants={letterVariants}
-                    className={`font-sans tracking-tight text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#FFF3D1] to-[#D4AF37] drop-shadow-[0_2px_12px_rgba(214,175,55,0.25)] ${letter === " " ? "mx-1.5" : ""}`}
-                  >
-                    {letter}
-                  </motion.span>
-                ))}
-              </motion.div>
-
-              {/* Sub-judul Instansi */}
-              <motion.div
-                initial={{ opacity: 0, letterSpacing: "0.1em" }}
-                animate={{ opacity: 1, letterSpacing: "0.25em" }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-                className="text-[9px] font-mono font-bold text-[#D4AF37] uppercase flex items-center gap-3"
-              >
-                <span className="w-1.5 h-[1px] bg-[#D4AF37]/40" />
-                SMKN 3 MANADO
-                <span className="w-1.5 h-[1px] bg-[#D4AF37]/40" />
-              </motion.div>
-
-              {/* Garis Progress */}
-              <div className="w-40 h-[1px] bg-stone-800 mt-10 relative overflow-hidden">
-                <motion.div 
-                  initial={{ left: "-100%" }}
-                  animate={{ left: "100%" }}
-                  transition={{ 
-                    repeat: Infinity, 
-                    duration: 1.6, 
-                    ease: [0.4, 0, 0.2, 1] 
+          {/* ─── PARTIKEL EMAS (HANYA RENDER SETELAH MOUNT) ─── */}
+          {mounted && (
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              {particles.map((p, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute rounded-full bg-gradient-to-b from-[#FFF5D6] via-[#D4AF37] to-transparent"
+                  style={{
+                    width: `${p.size}px`,
+                    height: `${p.size}px`,
+                    left: `${p.left}%`,
+                    bottom: "5%",
+                    filter: `blur(${p.blur}px)`,
+                    opacity: p.opacity,
                   }}
-                  className="absolute top-0 bottom-0 w-24 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"
+                  animate={{
+                    y: ["0vh", "-120vh"],
+                    x: [`${p.driftX}px`, `${p.driftX * 1.5}px`],
+                    opacity: [0, 0.6, 0.3, 0],
+                  }}
+                  transition={{
+                    duration: p.duration,
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: p.delay,
+                  }}
                 />
+              ))}
+            </div>
+          )}
+
+          {/* ─── DEKORASI SUDUT ─── */}
+          <motion.div
+            initial={{ opacity: 0, x: -20, y: -20 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="absolute top-10 left-10 w-20 h-20 border-t-4 border-l-4 border-[#D4AF37]/25"
+          />
+          <motion.div
+            initial={{ opacity: 0, x: 20, y: -20 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+            className="absolute top-10 right-10 w-20 h-20 border-t-4 border-r-4 border-[#D4AF37]/15"
+          />
+          <motion.div
+            initial={{ opacity: 0, x: -20, y: 20 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.8 }}
+            className="absolute bottom-10 left-10 w-20 h-20 border-b-4 border-l-4 border-[#D4AF37]/15"
+          />
+          <motion.div
+            initial={{ opacity: 0, x: 20, y: 20 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+            className="absolute bottom-10 right-10 w-20 h-20 border-b-4 border-r-4 border-[#D4AF37]/25"
+          />
+
+          {/* ─── KONTEN UTAMA ─── */}
+          <motion.div
+            initial={{ scale: 0.92, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="relative z-10 flex flex-col items-center text-center px-6 max-w-sm"
+          >
+            {/* Polaroid Frame */}
+            <motion.div
+              animate={{
+                rotate: [0, 2, -1.5, 1.5, 0],
+                y: [0, -3, 0, -2, 0],
+              }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="relative mb-8 p-5 bg-gradient-to-br from-[#1A1410] to-[#0F0B09] border-2 border-[#D4AF37]/20 shadow-[12px_12px_0_0_rgba(212,175,55,0.05)] rounded-sm"
+            >
+              <div className="absolute -top-2 -left-1 w-9 h-4 bg-[#D4AF37]/10 border border-[#D4AF37]/15 rounded-sm rotate-[-10deg] backdrop-blur-sm" />
+              <div className="absolute -bottom-2 -right-1 w-8 h-4 bg-[#D4AF37]/10 border border-[#D4AF37]/15 rounded-sm rotate-[8deg] backdrop-blur-sm" />
+              <div className="absolute top-1/2 -left-2 w-3 h-8 bg-[#D4AF37]/8 border border-[#D4AF37]/10 rounded-sm rotate-[15deg] backdrop-blur-sm" />
+
+              <div className="relative w-28 h-28 md:w-32 md:h-32">
+                <Image
+                  src="/logo/logo1.png"
+                  alt="Logo TE"
+                  fill
+                  className="object-contain drop-shadow-[0_0_30px_rgba(212,175,55,0.15)]"
+                  priority
+                />
+                <div className="absolute inset-0 rounded-full bg-[#D4AF37]/5 blur-xl scale-110" />
               </div>
 
-              {/* Footer Loading */}
-              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-center">
-                <span className="text-[8px] font-mono text-stone-500 tracking-[0.25em] uppercase block">
-                  SOLI DEO GLORIA
+              <div className="absolute -bottom-3 -right-3 text-[6px] font-mono font-black text-[#D4AF37]/30 uppercase tracking-[0.2em] rotate-12 bg-[#0F0B09]/90 px-2 py-0.5 border border-[#D4AF37]/10 rounded">
+                ARSIP
+              </div>
+            </motion.div>
+
+            {/* Title */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.7 }}
+              className="space-y-1"
+            >
+              <h1 className="font-serif text-3xl md:text-4xl font-bold text-white tracking-tight">
+                Team{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#FFF5D6] to-[#D4AF37] relative inline-block">
+                  Evangelisasi
+                  <span className="absolute -bottom-1.5 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent rounded" />
+                </span>
+              </h1>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8, duration: 0.6 }}
+                className="text-[10px] font-mono font-medium text-[#D4AF37]/50 tracking-[0.3em] uppercase"
+              >
+                SMK Negeri 3 Manado
+              </motion.p>
+            </motion.div>
+
+            {/* Garis */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 1, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              className="w-24 h-[1.5px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent my-4 rounded"
+            />
+
+            {/* Motto */}
+            <motion.p
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2, duration: 0.6 }}
+              className="text-[11px] font-serif italic text-[#D4AF37]/60 font-medium"
+            >
+              &quot;Beri yang terbaik untuk kemuliaan Tuhan&quot;
+            </motion.p>
+
+            {/* Progress */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.4, duration: 0.4 }}
+              className="mt-7 w-52 space-y-1.5"
+            >
+              <div className="flex justify-between text-[7px] font-mono font-bold text-[#D4AF37]/40 uppercase tracking-[0.2em]">
+                <span>Memuat Arsip</span>
+                <span className="font-mono tracking-normal">
+                  {String(Math.round(loadingProgress)).padStart(3, "0")}%
                 </span>
               </div>
+              <div className="w-full h-1.5 bg-[#1A1410] rounded-full overflow-hidden border border-[#D4AF37]/8">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-[#D4AF37] via-[#FFF5D6] to-[#D4AF37] rounded-full"
+                  style={{ width: `${loadingProgress}%` }}
+                  transition={{ duration: 0.1 }}
+                />
+              </div>
+            </motion.div>
 
-            </div>
+            {/* Dot animation */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.6, duration: 0.4 }}
+              className="mt-4 flex items-center gap-2"
+            >
+              {[0, 120, 240].map((delay, i) => (
+                <motion.span
+                  key={i}
+                  className="w-1.5 h-1.5 bg-[#D4AF37]/40 rounded-full"
+                  animate={{
+                    opacity: [0.2, 0.8, 0.2],
+                    scale: [1, 1.3, 1],
+                  }}
+                  transition={{
+                    duration: 1.2,
+                    repeat: Infinity,
+                    delay: delay / 1000,
+                    ease: "easeInOut",
+                  }}
+                />
+              ))}
+            </motion.div>
+
+            {/* Since 2024 */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.3 }}
+              transition={{ delay: 1.8, duration: 0.6 }}
+              className="mt-4 text-[8px] font-mono text-[#D4AF37]/20 tracking-[0.3em] uppercase"
+            >
+              Since 2024
+            </motion.p>
           </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ─── MAIN CONTENT REVEAL FROM BELOW ─── */}
-      {!isLoading && (
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={mainWrapperVariants}
-          className="will-change-transform"
-        >
-          <main className="relative min-h-screen bg-[#FFFDFB] text-stone-800 antialiased selection:bg-[#D4AF37]/20 selection:text-[#6F4E37] overflow-x-hidden scroll-smooth">
-            
-            <Navbar 
-              activeTab={activeTab} 
-              setActiveTab={setActiveTab} 
-              showMobileNav={showMobileNav} 
-            />
-
-            {/* SECTION 1: HERO */}
-            <div id="beranda" className="w-full scroll-mt-0">
-              <Hero />
-            </div>
-
-            <div className="relative z-10">
-              
-              {/* SECTION 2: ABOUT */}
-              <motion.div 
-                id="about" 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-12%" }}
-                variants={fadeInUp}
-                className="scroll-mt-20 bg-[#FFFDFB]"
-              >
-                <About />
-              </motion.div>
-
-              {/* SECTION 3: KEGIATAN */}
-              <motion.div 
-                id="kegiatan" 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-12%" }}
-                variants={fadeInUp}
-                className="scroll-mt-20"
-              >
-                <Kegiatan />
-              </motion.div>
-
-              {/* SECTION 4: WHY JOIN */}
-              <motion.div 
-                id="whyjoin" 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-12%" }}
-                variants={fadeInUp}
-                className="scroll-mt-20 bg-[#FAF8F5]"
-              >
-                <WhyJoin />
-              </motion.div>
-
-            </div>
-
-            <Footer />
-          </main>
         </motion.div>
-      )}
-    </>
+      </AnimatePresence>
+    );
+  }
+
+  // ─── KONTEN UTAMA ───
+  return (
+    <main className="relative min-h-screen bg-[#FFFDFB] text-stone-800 antialiased selection:bg-[#D4AF37]/20 selection:text-[#6F4E37] overflow-x-hidden scroll-smooth">
+      <Navbar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        showMobileNav={showMobileNav}
+      />
+
+      <div id="beranda" className="w-full scroll-mt-0">
+        <Hero />
+      </div>
+
+      <div className="relative z-10">
+        <motion.div
+          id="about"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-12%" }}
+          variants={fadeInUp}
+          className="scroll-mt-20 bg-[#FFFDFB]"
+        >
+          <About />
+        </motion.div>
+
+        <motion.div
+          id="kegiatan"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-12%" }}
+          variants={fadeInUp}
+          className="scroll-mt-20"
+        >
+          <Kegiatan />
+        </motion.div>
+
+        <motion.div
+          id="whyjoin"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-12%" }}
+          variants={fadeInUp}
+          className="scroll-mt-20 bg-[#FAF8F5]"
+        >
+          <WhyJoin />
+        </motion.div>
+      </div>
+
+      <Footer />
+    </main>
   );
 }
