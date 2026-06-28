@@ -17,7 +17,7 @@ import {
   Layers,
 } from 'lucide-react';
 
-const category_OPTIONS = ['Project', 'TE', 'Natal', 'Paskah', 'BC','Inti TE','seksie umum', 'seksie ibadah', 'seksie kreatif', 'seksie dokum', 'seksie perlengkapan', 'seksie doa & sharing', 'seksie humas'];
+const category_OPTIONS = ['Project', 'TE', 'Natal', 'Paskah', 'BC','Pembina','Inti TE','seksie umum', 'seksie ibadah', 'seksie kreatif', 'seksie dokum', 'seksie perlengkapan', 'seksie doa & sharing', 'seksie humas'];
 
 export default function ItemForm({
   itemToEdit = null,
