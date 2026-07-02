@@ -20,6 +20,7 @@ export const metadata = {
   },
   description: "Wadah Pelayanan Siswa Kristen (Pelsis) / Team Evangelisasi resmi di SMK Negeri 3 Manado. Tempat bertumbuh dalam iman, karakter Kristiani, dan aksi sosial nyata.",
   keywords: [
+    "SMK 3 Manado",
     "Team Evangelisasi SMK 3 Manado",
     "SMK 3 Manado Team Evangelisasi", 
     "Pelsis SMKN 3 Manado",
