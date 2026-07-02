@@ -44,7 +44,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/logo/logo1.png",
+        url: "/logo/logo.png",
         width: 1200,
         height: 630,
         alt: "Logo Resmi Team Evangelisasi / Pelsis SMKN 3 Manado",
