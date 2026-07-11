@@ -266,7 +266,7 @@ export default function Navbar({
                 </button>
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                   <Link 
-                    href="https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor"
+                    href="https://docs.google.com/forms/d/e/1FAIpQLScb5FsAfjekNGgrYweK62YxwQsfMoS3jKDMt05mPS7p0yvckA/viewform?usp=publish-editor"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`px-6 py-2.5 rounded-full text-xs font-black tracking-[0.1em] flex items-center gap-2 transition-all duration-300 ${
