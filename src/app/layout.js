@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { MusicProvider } from "@/components/MusicProvider"; 
 import FloatingChat from "@/components/ai/FloatingChat";
+import "./globals.css"; 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,7 +13,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// ─── METADATA YANG MENARIK & SEO OPTIMIZED (UPDATED) ───
+// ─── METADATA YANG MENARIK & SEO OPTIMIZED ───
 export const metadata = {
   title: {
     default: "Team Evangelisasi (Pelsis) - SMKN 3 Manado",
@@ -68,9 +69,11 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {children}
-
-        <FloatingChat />
+        {/* Bungkus seluruh konten dan komponen global dengan Music Provider */}
+        <MusicProvider>
+          {children}
+          <FloatingChat />
+        </MusicProvider>
       </body>
     </html>
   );

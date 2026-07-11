@@ -7,12 +7,16 @@ import {
   House, 
   CalendarDays, 
   HelpCircle, 
-  ClipboardList 
+  ClipboardList,
+  Volume2, 
+  VolumeX 
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image"; 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { usePathname } from "next/navigation";
+import { useMusic } from "@/components/MusicProvider"; // 🌟 Import custom hook musik Anda
+
 
 export default function Navbar({ 
   activeTab: externalActiveTab, 
@@ -27,6 +31,9 @@ export default function Navbar({
   const [isReady, setIsReady] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
   const pathname = usePathname();
+
+    const { isPlaying, toggleMusic } = useMusic();
+  
   
   const lastScrollY = useRef(0);
 
@@ -236,6 +243,27 @@ export default function Navbar({
 
               {/* CALL TO ACTION BUTTON */}
               <div className="flex justify-end items-center">
+                <button 
+                  onClick={toggleMusic}
+                  type="button"
+                  className={`flex items-center gap-2 px-4 py-2.5 text-xs font-black tracking-wider rounded-full transition-all active:scale-95 duration-200 cursor-pointer border ${
+                    isAtTop 
+                      ? "bg-stone-900 text-white border-/20 hover:bg-stone-800" 
+                      : "bg-stone-100 text-[#6F4E37] border-stone-200 hover:bg-stone-200"
+                  }`}
+                >
+                  {isPlaying ? (
+                    <>
+                      <Volume2 size={14} className="animate-pulse text-[#D4AF37]" />
+                      <span>ON</span>
+                    </>
+                  ) : (
+                    <>
+                      <VolumeX size={14} className="opacity-60" />
+                      <span>MUSIC</span>
+                    </>
+                  )}
+                </button>
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                   <Link 
                     href="https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor"
@@ -265,7 +293,7 @@ export default function Navbar({
             animate={{ y: 0, x: "-50%", opacity: 1 }}
             exit={{ y: 100, x: "-50%", opacity: 0 }}
             transition={{ type: "spring", stiffness: 280, damping: 26 }}
-            className="md:hidden fixed left-1/2 bottom-5 z-[9999] w-[92vw] max-w-md bg-white/95 backdrop-blur-2xl border border-stone-200/70 shadow-[0_20px_50px_rgba(111,78,55,0.15)] rounded-[2rem] p-2 flex justify-between items-center gap-1 select-none"
+            className="md:hidden fixed left-1/2 bottom-5 z-[9999] w-[94vw] max-w-md bg-white/95 backdrop-blur-2xl border border-stone-200/70 shadow-[0_20px_50px_rgba(111,78,55,0.15)] rounded-[2rem] p-2 flex justify-between items-center gap-1 select-none"
           >
             {menuItems.map((item) => {
               const isActive = activeTab?.toLowerCase() === item.id;
@@ -276,7 +304,7 @@ export default function Navbar({
                   key={item.id}
                   href={item.href}
                   onClick={() => setActiveTab(item.id)}
-                  className="flex-1 flex flex-col items-center justify-center relative py-2.5 min-w-[55px] text-center transition-all duration-200"
+                  className="flex-1 flex flex-col items-center justify-center relative py-2.5 min-w-[50px] text-center transition-all duration-200"
                 >
                   {isActive && (
                     <motion.div
@@ -287,10 +315,10 @@ export default function Navbar({
                   )}
 
                   <div className={`transition-all duration-300 ${isActive ? "text-white scale-110" : "text-stone-400"}`}>
-                    <IconComponent size={20} strokeWidth={isActive ? 2.5 : 2} />
+                    <IconComponent size={18} strokeWidth={isActive ? 2.5 : 2} />
                   </div>
 
-                  <span className={`text-[10px] font-bold tracking-wide mt-1 transition-colors duration-300 ${
+                  <span className={`text-[9px] font-bold tracking-wide mt-1 transition-colors duration-300 ${
                     isActive ? "text-white font-extrabold" : "text-stone-500"
                   }`}>
                     {item.label}
@@ -298,6 +326,31 @@ export default function Navbar({
                 </Link>
               );
             })}
+
+            {/* Pembatas Tipis Sebelum Tombol Musik */}
+            <span className="w-[1px] h-6 bg-stone-200 mx-1 shrink-0" />
+
+            {/* FITUR MUSIK MOBILE */}
+            <button 
+              onClick={toggleMusic}
+              type="button"
+              className={`flex-1 flex flex-col items-center justify-center py-2.5 min-w-[50px] text-center transition-colors duration-300 active:scale-90 cursor-pointer ${
+                isPlaying ? "text-[#6F4E37] font-bold" : "text-stone-400 hover:text-stone-600"
+              }`}
+            >
+              <div className="h-[18px] flex items-center justify-center mb-1">
+                {isPlaying ? (
+                  <Volume2 size={18} className="animate-pulse text-[#D4AF37]" />
+                ) : (
+                  <VolumeX size={18} className="text-stone-400" />
+                )}
+              </div>
+              <span className={`text-[9px] font-bold tracking-wide transition-colors ${
+                isPlaying ? "text-[#6F4E37] font-extrabold" : "text-stone-500"
+              }`}>
+                {isPlaying ? "ON" : "MUSIC"}
+              </span>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

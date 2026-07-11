@@ -7,12 +7,15 @@ import {
   House, 
   CalendarDays, 
   HelpCircle, 
-  ClipboardList 
+  ClipboardList,
+  Volume2, 
+  VolumeX 
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image"; 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { usePathname } from "next/navigation";
+import { useMusic } from "@/components/MusicProvider"; // 🌟 Import custom hook musik Anda
 
 export default function Navbar({ 
   activeTab, 
@@ -23,10 +26,11 @@ export default function Navbar({
   const [isAtTop, setIsAtTop] = useState(true);
   const pathname = usePathname();
   
-  // Menggunakan useRef untuk melacak posisi scroll sebelumnya tanpa memicu siklus render ulang ekstra
+  // 🌟 Ambil fungsi dan state musik langsung dari Provider global
+  const { isPlaying, toggleMusic } = useMusic();
+
   const lastScrollY = useRef(0);
 
-  // Memastikan inisialisasi awal berjalan mulus setelah komponen terpasang
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsReady(true);
@@ -35,12 +39,11 @@ export default function Navbar({
     return () => clearTimeout(timer);
   }, []);
 
-  // Memisahkan fungsi penanganan scroll menggunakan useCallback untuk optimasi performa
   const handleScroll = useCallback(() => {
     if (!isReady) return;
     const currentScroll = window.scrollY;
 
-    // 1. LOGIKA VISIBILITAS NAVBAR
+    // 1. LOGIKA VISIBILITAS NAVBAR (Hanya menyembunyikan jika di-scroll ke bawah)
     if (currentScroll <= 30) {
       setIsAtTop(true);
       setShow(true);
@@ -48,19 +51,20 @@ export default function Navbar({
       setIsAtTop(false);
       if (currentScroll > 150) {
         const delta = currentScroll - lastScrollY.current;
-        if (delta > 10) setShow(false); // Gulir ke bawah: Sembunyikan
-        if (delta < -10) setShow(true); // Gulir ke atas: Tampilkan
+        if (delta > 10) setShow(false); 
+        if (delta < -10) setShow(true); 
       }
     }
     lastScrollY.current = currentScroll;
 
-    // 2. SINKRONISASI AKTIFNYA MENU (Seksi Halaman vs Route URL)
-    if (pathname === "/about") {
-      setActiveTab("detail");
+    // 2. SINKRONISASI SEKSI AKTIF (Hanya berjalan di halaman utama "/")
+    if (pathname !== "/") {
+      if (pathname === "/about") {
+        setActiveTab("detail");
+      }
       return;
     }
 
-    // Jika di halaman utama, pantau elemen bento id untuk perpindahan lampu aktif
     const sections = ["beranda", "about", "sections", "kegiatan", "whyjoin"];
     const scrollPosition = currentScroll + (window.innerHeight / 3);
 
@@ -71,8 +75,6 @@ export default function Navbar({
         const height = element.offsetHeight;
         
         if (scrollPosition >= top && scrollPosition < top + height) {
-          // Jika melewati seksi bento 'about' atau 'sections' di halaman Home,
-          // status navigasi tetap menyala di "Beranda", tidak lompat ke "Detail"
           if (id === "about" || id === "sections") {
             setActiveTab("beranda");
           } else {
@@ -87,17 +89,24 @@ export default function Navbar({
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     
-    // SOLUSI ERROR MERAH: Menunda eksekusi pemeriksaan awal menggunakan macrotask (setTimeout) 
-    // agar sinkronisasi state berjalan aman setelah siklus render utama React selesai.
     const initialSync = setTimeout(() => {
       handleScroll();
-    }, 0);
+    }, 50);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       clearTimeout(initialSync);
     };
   }, [handleScroll]);
+
+  // Otomatis update tab jika rute halaman berubah tanpa nunggu scroll halaman
+  useEffect(() => {
+    if (pathname === "/about") {
+      setActiveTab("detail");
+    } else if (pathname === "/") {
+      setActiveTab("beranda");
+    }
+  }, [pathname, setActiveTab]);
 
   const menuItems = [
     { id: "beranda", label: "Beranda", href: "/", icon: House },
@@ -214,8 +223,30 @@ export default function Navbar({
                 </ul>
               </div>
 
-              {/* TOMBOL AKSI DESKTOP */}
-              <div className="flex justify-end items-center">
+              {/* KONTROL MUSIK DESKTOP & TOMBOL GABUNG */}
+              <div className="flex justify-end items-center gap-3">
+                <button 
+                  onClick={toggleMusic}
+                  type="button"
+                  className={`flex items-center gap-2 px-4 py-2.5 text-xs font-black tracking-wider rounded-full transition-all active:scale-95 duration-200 cursor-pointer border ${
+                    isAtTop 
+                      ? "bg-white/10 text-white border-white/20 hover:bg-white/20" 
+                      : "bg-stone-100 text-[#6F4E37] border-stone-200 hover:bg-stone-200"
+                  }`}
+                >
+                  {isPlaying ? (
+                    <>
+                      <Volume2 size={14} className="animate-pulse text-[#D4AF37]" />
+                      <span>ON</span>
+                    </>
+                  ) : (
+                    <>
+                      <VolumeX size={14} className="opacity-60" />
+                      <span>MUSIC</span>
+                    </>
+                  )}
+                </button>
+
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                   <Link 
                     href="https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor"
@@ -237,7 +268,7 @@ export default function Navbar({
         </AnimatePresence>
       </div>
 
-      {/* ─── 2. BOTTOM FLOATING DOCK (MOBILE) ─── */}
+      {/* ─── 2. BOTTOM FLOATING DOCK (MOBILE WITH MUSIC CONTROL) ─── */}
       <AnimatePresence>
         {show && (
           <motion.div
@@ -245,7 +276,7 @@ export default function Navbar({
             animate={{ y: 0, x: "-50%", opacity: 1 }}
             exit={{ y: 100, x: "-50%", opacity: 0 }}
             transition={{ type: "spring", stiffness: 280, damping: 26 }}
-            className="md:hidden fixed left-1/2 bottom-5 z-[9999] w-[92vw] max-w-md bg-white/95 backdrop-blur-2xl border border-stone-200/70 shadow-[0_20px_50px_rgba(111,78,55,0.15)] rounded-[2rem] p-2 flex justify-between items-center gap-1 select-none"
+            className="md:hidden fixed left-1/2 bottom-5 z-[9999] w-[94vw] max-w-md bg-white/95 backdrop-blur-2xl border border-stone-200/70 shadow-[0_20px_50px_rgba(111,78,55,0.15)] rounded-[2rem] p-2 flex justify-between items-center gap-1 select-none"
           >
             {menuItems.map((item) => {
               const isActive = activeTab?.toLowerCase() === item.id;
@@ -256,7 +287,7 @@ export default function Navbar({
                   key={item.id}
                   href={item.href}
                   onClick={() => setActiveTab(item.id)}
-                  className="flex-1 flex flex-col items-center justify-center relative py-2.5 min-w-[55px] text-center transition-all duration-200"
+                  className="flex-1 flex flex-col items-center justify-center relative py-2.5 min-w-[50px] text-center transition-all duration-200"
                 >
                   {isActive && (
                     <motion.div
@@ -267,10 +298,10 @@ export default function Navbar({
                   )}
 
                   <div className={`transition-all duration-300 ${isActive ? "text-white scale-110" : "text-stone-400"}`}>
-                    <IconComponent size={20} strokeWidth={isActive ? 2.5 : 2} />
+                    <IconComponent size={18} strokeWidth={isActive ? 2.5 : 2} />
                   </div>
 
-                  <span className={`text-[10px] font-bold tracking-wide mt-1 transition-colors duration-300 ${
+                  <span className={`text-[9px] font-bold tracking-wide mt-1 transition-colors duration-300 ${
                     isActive ? "text-white font-extrabold" : "text-stone-500"
                   }`}>
                     {item.label}
@@ -278,6 +309,31 @@ export default function Navbar({
                 </Link>
               );
             })}
+
+            {/* Pembatas Tipis Sebelum Tombol Musik */}
+            <span className="w-[1px] h-6 bg-stone-200 mx-1 shrink-0" />
+
+            {/* FITUR MUSIK MOBILE */}
+            <button 
+              onClick={toggleMusic}
+              type="button"
+              className={`flex-1 flex flex-col items-center justify-center py-2.5 min-w-[50px] text-center transition-colors duration-300 active:scale-90 cursor-pointer ${
+                isPlaying ? "text-[#6F4E37] font-bold" : "text-stone-400 hover:text-stone-600"
+              }`}
+            >
+              <div className="h-[18px] flex items-center justify-center mb-1">
+                {isPlaying ? (
+                  <Volume2 size={18} className="animate-pulse text-[#D4AF37]" />
+                ) : (
+                  <VolumeX size={18} className="text-stone-400" />
+                )}
+              </div>
+              <span className={`text-[9px] font-bold tracking-wide transition-colors ${
+                isPlaying ? "text-[#6F4E37] font-extrabold" : "text-stone-500"
+              }`}>
+                {isPlaying ? "ON" : "MUSIC"}
+              </span>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

@@ -33,7 +33,7 @@ export default function SeksiPelayananSection() {
   const seksiList = [
     {
       icon: Flame,
-      title: "Sie Ibadah",
+      title: "Seksi Ibadah",
       tagline: "Penyusun Acara & Koordinator Petugas Ibadah",
       linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor", // Ganti dengan link Google Form asli
       tasks: [
@@ -46,7 +46,7 @@ export default function SeksiPelayananSection() {
     },
     {
       icon: Camera,
-      title: "Sie Dokum",
+      title: "Seksi Dokum",
       tagline: "Penjaga Memori & Jejak Digital Pelayanan",
       linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor", // Ganti dengan link Google Form asli
       tasks: [
@@ -59,7 +59,7 @@ export default function SeksiPelayananSection() {
     },
     {
       icon: Palette,
-      title: "Sie Kreativitas",
+      title: "Seksi Kreativitas",
       tagline: "Pusat Pelatihan & Pengembang Bakat",
       linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor", // Ganti dengan link Google Form asli
       tasks: [
@@ -72,7 +72,7 @@ export default function SeksiPelayananSection() {
     },
     {
       icon: Wrench,
-      title: "Sie Perlengkapan",
+      title: "Seksi Perlengkapan",
       tagline: "Garda Terdepan Kesiapan Teknis & Logistik",
       linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor", // Ganti dengan link Google Form asli
       tasks: [
@@ -85,7 +85,7 @@ export default function SeksiPelayananSection() {
     },
     {
       icon: HeartHandshake,
-      title: "Sie Doa & Sharing",
+      title: "Seksi Doa & Sharing",
       tagline: "Sahabat Curhat & Teman Berdoa",
       linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor", // Ganti dengan link Google Form asli
       tasks: [
@@ -97,7 +97,7 @@ export default function SeksiPelayananSection() {
     },
     {
       icon: Megaphone,
-      title: "Sie Humas",
+      title: "Seksi Humas",
       tagline: "Jembatan Informasi & Penggerak Multi-Relasi",
       linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor", // Ganti dengan link Google Form asli
       tasks: [
@@ -133,7 +133,7 @@ export default function SeksiPelayananSection() {
             STRUKTUR ORGANISASI
           </div>
           <h2 className="text-3xl md:text-5xl font-black tracking-tight text-stone-900 leading-tight">
-            Seksie <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6F4E37] to-[#D4AF37] drop-shadow-xs">Team Evangelisasi.</span>
+            Seksi <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6F4E37] to-[#D4AF37] drop-shadow-xs">Team Evangelisasi.</span>
           </h2>
           <p className="text-xs font-bold text-stone-400 mt-2 md:mt-4 max-w-sm md:mx-auto leading-relaxed">
             Kenali peran dan tanggung jawab dari setiap divisi kerja pelayanan untuk mendukung pekerjaan Tuhan.
