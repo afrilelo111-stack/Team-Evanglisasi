@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { MusicProvider } from "@/components/MusicProvider"; 
-import FloatingChat from "@/components/ai/FloatingChat";
 import "./globals.css"; 
 
 const geistSans = Geist({
@@ -35,7 +34,6 @@ export const metadata = {
   creator: "Team Evangelisasi Developer",
   metadataBase: new URL("https://pelsis-te.vercel.app"), 
   
-  // Tampilan saat link website dibagikan di WhatsApp, Facebook, dll.
   openGraph: {
     title: "Team Evangelisasi (Pelsis) - SMKN 3 Manado",
     description: "Beri yang terbaik untuk kemuliaan Tuhan. Mari bergabung bersama Pelayanan Siswa Kristen (Pelsis) / Team Evangelisasi SMKN 3 Manado.",
@@ -53,7 +51,6 @@ export const metadata = {
     ],
   },
 
-  // Tampilan khusus jika link dibagikan di Twitter/X
   twitter: {
     card: "summary_large_image",
     title: "Team Evangelisasi (Pelsis) - SMKN 3 Manado",
@@ -69,10 +66,9 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {/* Bungkus seluruh konten dan komponen global dengan Music Provider */}
+        {/* Bungkus seluruh konten dengan Music Provider tanpa FloatingChat AI */}
         <MusicProvider>
           {children}
-          <FloatingChat />
         </MusicProvider>
       </body>
     </html>
