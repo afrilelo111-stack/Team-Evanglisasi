@@ -64,7 +64,7 @@ export default function HeroSection() {
         >
           {/* Tombol Kiri: Guru Agama */}
           <Link 
-            href="#teachers"
+            href="pembina"
             className="w-full sm:w-auto px-8 py-3.5 bg-transparent border-2 border-[#D4AF37] hover:bg-[#D4AF37]/5 text-[#D4AF37] font-black text-xs tracking-widest rounded-xl transition-all flex items-center justify-center gap-2"
           >
             <Users size={16} strokeWidth={2.5} />
