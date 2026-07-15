@@ -309,7 +309,7 @@ export default function AboutEvangelisasi() {
 
           <div className="space-y-6 text-stone-600 text-sm md:text-base leading-relaxed font-medium mb-10">
             <p>
-              <strong className="text-[#3D2A1C]">Team Evangelisasi (TE)</strong> adalah komunitas dan wadah persekutuan resmi bagi siswa-siswi Kristen di SMKN 3 Manado. Di sini, kami bukan cuma sekadar berorganisasi, tapi membangun sebuah <span className="text-[#8B6347] font-bold bg-[#8B6347]/5 px-1.5 py-0.5 rounded">circle pertemanan yang sehat, suportif, dan penuh rasa kekeluargaan</span>.
+              <strong className="text-[#3D2A1C]">Team Evangelisasi (TE)</strong> adalah komunitas dan wadah persekutuan resmi bagi siswa-siswi Kristen di SMKN 3 Manado. Di sini, kami bukan cuma sekadar berorganisasi, tapi membangun sebuah <span className="text-[#8B6347] font-bold bg-[#8B6347]/5 px-1.5 py-0.5 rounded">hubungan pertemanan yang sehat, suportif, dan penuh rasa kekeluargaan</span>.
             </p>
             <p>
               Lewat berbagai kegiatan seru—mulai dari ibadah, pengembangan bakat (Musik, Banners, Rebana), tim multimedia, hingga aksi sosial nyata—TE hadir sebagai tempat terbaik buat kamu yang ingin mengasah talenta sekaligus memperdalam iman rohani selama masa sekolah.
