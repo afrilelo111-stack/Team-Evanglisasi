@@ -35,7 +35,7 @@ export default function SeksiPelayananSection() {
       icon: Flame,
       title: "Seksi Ibadah",
       tagline: "Penyusun Acara & Koordinator Petugas Ibadah",
-      linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor", // Ganti dengan link Google Form asli
+      linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScb5FsAfjekNGgrYweK62YxwQsfMoS3jKDMt05mPS7p0yvckA/viewform", // Ganti dengan link Google Form asli
       tasks: [
         "Bertanggung jawab penuh dalam merancang dan mengatur seluruh susunan acara ibadah.",
         "Membuat jadwal petugas ibadah mulai dari WL, Singers, Pemusik (Gitar & Cajon), Multimedia, Rebana, Banners, hingga Tim Paduan Suara.",
@@ -48,7 +48,7 @@ export default function SeksiPelayananSection() {
       icon: Camera,
       title: "Seksi Dokum",
       tagline: "Penjaga Memori & Jejak Digital Pelayanan",
-      linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor", // Ganti dengan link Google Form asli
+      linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScb5FsAfjekNGgrYweK62YxwQsfMoS3jKDMt05mPS7p0yvckA/viewform", // Ganti dengan link Google Form asli
       tasks: [
         "Mengabadikan setiap momen berharga dan aktivitas esensial pelayanan melalui dokumentasi foto serta video berkualitas tinggi.",
         "Fokus mendokumentasikan agenda rutin komunitas seperti ibadah Jumat, persekutuan doa pagi, doa pulang sekolah, hingga sesi latihan bersama.",
@@ -61,7 +61,7 @@ export default function SeksiPelayananSection() {
       icon: Palette,
       title: "Seksi Kreativitas",
       tagline: "Pusat Pelatihan & Pengembang Bakat",
-      linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor", // Ganti dengan link Google Form asli
+      linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScb5FsAfjekNGgrYweK62YxwQsfMoS3jKDMt05mPS7p0yvckA/viewform", // Ganti dengan link Google Form asli
       tasks: [
         "Mengatur jadwal giliran pelayanan untuk tim WL, Singers, Rebana, hingga Banners.",
         "Mengadakan latihan rutin setiap hari Senin dan Jumat (vokal, tarian rebana/banners, dan alat musik).",
@@ -74,7 +74,7 @@ export default function SeksiPelayananSection() {
       icon: Wrench,
       title: "Seksi Perlengkapan",
       tagline: "Garda Terdepan Kesiapan Teknis & Logistik",
-      linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor", // Ganti dengan link Google Form asli
+      linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScb5FsAfjekNGgrYweK62YxwQsfMoS3jKDMt05mPS7p0yvckA/viewform", // Ganti dengan link Google Form asli
       tasks: [
         "Mempersiapkan dan memastikan semua peralatan teknis siap digunakan untuk ibadah Jumat maupun ibadah lainnya.",
         "Hadir lebih awal di lokasi pelayanan guna melakukan pengecekan alat dan sound check demi kelancaran ibadah.",
@@ -87,7 +87,7 @@ export default function SeksiPelayananSection() {
       icon: HeartHandshake,
       title: "Seksi Doa & Sharing",
       tagline: "Sahabat Curhat & Teman Berdoa",
-      linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor", // Ganti dengan link Google Form asli
+      linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScb5FsAfjekNGgrYweK62YxwQsfMoS3jKDMt05mPS7p0yvckA/viewform", // Ganti dengan link Google Form asli
       tasks: [
         "Bertanggung jawab penuh dalam membuat, menyusun, dan mengatur jadwal petugas doa bersama yang dilaksanakan setiap pagi sebelum masuk kelas serta sore hari setelah selesai jam pulang sekolah.",
         "Mengadakan acara kumpul santai setiap awal bulan untuk tempat berbagi cerita bersyukur sekaligus saling mendoakan kalau ada masalah."
@@ -99,7 +99,7 @@ export default function SeksiPelayananSection() {
       icon: Megaphone,
       title: "Seksi Humas",
       tagline: "Jembatan Informasi & Penggerak Multi-Relasi",
-      linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScjK2aENHr5ihdNb-xYpDyGmDENefEszcWXc0uni4SkWH9KLA/viewform?usp=publish-editor", // Ganti dengan link Google Form asli
+      linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScb5FsAfjekNGgrYweK62YxwQsfMoS3jKDMt05mPS7p0yvckA/viewform", // Ganti dengan link Google Form asli
       tasks: [
         "Membangun jalur komunikasi yang interaktif, inklusif, dan responsif guna menyampaikan informasi terupdate kepada seluruh pengurus.",
         "Menggandeng dan mengundang siswa-siswi Kristen sekolah untuk bersekutu bersama dalam ibadah rutin yang digelar setiap hari Jumat.",
