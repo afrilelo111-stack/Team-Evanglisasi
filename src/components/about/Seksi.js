@@ -38,7 +38,7 @@ export default function SeksiPelayananSection() {
       linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScb5FsAfjekNGgrYweK62YxwQsfMoS3jKDMt05mPS7p0yvckA/viewform", // Ganti dengan link Google Form asli
       tasks: [
         "Bertanggung jawab penuh dalam merancang dan mengatur seluruh susunan acara ibadah.",
-        "Membuat jadwal petugas ibadah mulai dari WL, Singers, Pemusik (Gitar & Cajon), Multimedia, Rebana, Banners, hingga Tim Paduan Suara.",
+        "Membuat jadwal petugas ibadah mulai dari WL, Singers, Pemusik (Gitar & Cajon), Multimedia, Rebana, Banners.",
         "Mengatur tim khusus untuk menjaga keamanan dan ketertiban supaya ibadah di sekolah berjalan tenang dan khusyuk."
       ],
       theme: "hover:border-stone-400 hover:shadow-amber-500/[0.04]",
@@ -64,7 +64,7 @@ export default function SeksiPelayananSection() {
       linkForm: "https://docs.google.com/forms/d/e/1FAIpQLScb5FsAfjekNGgrYweK62YxwQsfMoS3jKDMt05mPS7p0yvckA/viewform", // Ganti dengan link Google Form asli
       tasks: [
         "Mengatur jadwal giliran pelayanan untuk tim WL, Singers, Rebana, hingga Banners.",
-        "Mengadakan latihan rutin setiap hari Senin dan Jumat (vokal, tarian rebana/banners, dan alat musik).",
+        "Mengadakan latihan rutin setiap hari Senin dan Jumat (tarian rebana/banners, dan alat musik).",
         "Fokus melatih dan mengembangkan bakat teman-teman agar semakin siap dan percaya diri dalam melayani."
       ],
       theme: "hover:border-stone-400 hover:shadow-purple-500/[0.04]",
